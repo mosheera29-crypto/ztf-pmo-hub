@@ -1,0 +1,1885 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ZTF PMO Hub</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;0,9..40,600;0,9..40,700;1,9..40,300&family=DM+Mono:wght@400;500&display=swap');
+
+  :root {
+    --navy: #1a2e50;
+    --navy-mid: #223660;
+    --navy-light: #2d4878;
+    --navy-border: #3a5a8a;
+    --accent: #5baeff;
+    --accent-dim: rgba(91,174,255,0.15);
+    --accent-glow: rgba(91,174,255,0.3);
+    --red: #ff6b6b;
+    --red-bg: rgba(255,107,107,0.12);
+    --amber: #ffb547;
+    --amber-bg: rgba(255,181,71,0.12);
+    --green: #3dd68c;
+    --green-bg: rgba(61,214,140,0.12);
+    --text-primary: #f0f5ff;
+    --text-secondary: #a8c8e8;
+    --text-muted: #7098be;
+    --card-bg: #1e3560;
+    --card-border: #2a4a78;
+    --card-hover: #243f70;
+    --sidebar-w: 240px;
+    --header-h: 64px;
+    --font: 'DM Sans', -apple-system, sans-serif;
+    --mono: 'DM Mono', monospace;
+  }
+
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  html { scroll-behavior: smooth; }
+
+  body {
+    font-family: var(--font);
+    background: var(--navy);
+    color: var(--text-primary);
+    min-height: 100vh;
+    display: flex;
+    overflow-x: hidden;
+  }
+
+  /* ── SIDEBAR ── */
+  .sidebar {
+    width: var(--sidebar-w);
+    min-height: 100vh;
+    background: var(--navy-mid);
+    border-right: 1px solid var(--navy-border);
+    display: flex;
+    flex-direction: column;
+    position: fixed;
+    top: 0; left: 0;
+    z-index: 100;
+    padding: 0;
+  }
+
+  .sidebar-logo {
+    padding: 24px 20px 20px;
+    border-bottom: 1px solid var(--navy-border);
+  }
+
+  .logo-mark {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+
+  .logo-icon {
+    width: 32px; height: 32px;
+    background: linear-gradient(135deg, var(--accent), #2563eb);
+    border-radius: 8px;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 14px; font-weight: 700; color: white;
+    letter-spacing: -0.5px;
+    flex-shrink: 0;
+  }
+
+  .logo-text {
+    font-size: 13px;
+    font-weight: 600;
+    color: var(--text-primary);
+    letter-spacing: 0.02em;
+    line-height: 1.3;
+  }
+
+  .logo-sub {
+    font-size: 10px;
+    color: var(--text-muted);
+    font-weight: 400;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    margin-top: 1px;
+  }
+
+  .sidebar-section {
+    padding: 20px 12px 8px;
+  }
+
+  .sidebar-label {
+    font-size: 9px;
+    font-weight: 600;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--text-muted);
+    padding: 0 8px;
+    margin-bottom: 6px;
+  }
+
+  .sidebar-nav {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+  }
+
+  .nav-item {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 9px 10px;
+    border-radius: 7px;
+    cursor: pointer;
+    font-size: 13px;
+    font-weight: 500;
+    color: var(--text-secondary);
+    transition: all 0.15s ease;
+    border: none;
+    background: none;
+    text-align: left;
+    width: 100%;
+  }
+
+  .nav-item:hover { background: var(--accent-dim); color: var(--text-primary); }
+  .nav-item.active { background: var(--accent-dim); color: var(--accent); }
+
+  .nav-icon {
+    width: 16px; height: 16px;
+    flex-shrink: 0;
+    opacity: 0.7;
+  }
+
+  .nav-item.active .nav-icon { opacity: 1; }
+
+  .sidebar-footer {
+    margin-top: auto;
+    padding: 16px 20px;
+    border-top: 1px solid var(--navy-border);
+    font-size: 11px;
+    color: var(--text-muted);
+    line-height: 1.5;
+  }
+
+  /* ── MAIN ── */
+  .main {
+    margin-left: var(--sidebar-w);
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    min-width: 0;
+  }
+
+  /* ── HEADER ── */
+  .header {
+    height: var(--header-h);
+    background: rgba(26,46,80,0.97);
+    backdrop-filter: blur(12px);
+    border-bottom: 1px solid var(--navy-border);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0 28px;
+    position: sticky;
+    top: 0;
+    z-index: 90;
+  }
+
+  .header-left {
+    display: flex;
+    flex-direction: column;
+  }
+
+  .header-title {
+    font-size: 17px;
+    font-weight: 600;
+    color: var(--text-primary);
+    letter-spacing: -0.01em;
+  }
+
+  .header-sub {
+    font-size: 12px;
+    color: var(--text-muted);
+    margin-top: 1px;
+  }
+
+  .header-right {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+  }
+
+  .date-badge {
+    font-family: var(--mono);
+    font-size: 11px;
+    color: var(--text-secondary);
+    background: var(--navy-light);
+    border: 1px solid var(--navy-border);
+    padding: 5px 10px;
+    border-radius: 5px;
+    letter-spacing: 0.04em;
+  }
+
+  .refresh-btn {
+    height: 32px;
+    background: var(--navy-light);
+    border: 1px solid var(--navy-border);
+    border-radius: 7px;
+    display: flex; align-items: center; justify-content: center; gap: 6px;
+    cursor: pointer;
+    color: var(--text-secondary);
+    font-size: 13px;
+    font-family: var(--font);
+    font-weight: 500;
+    padding: 0 12px;
+    transition: all 0.15s;
+  }
+
+  .refresh-btn:hover { background: var(--accent-dim); color: var(--accent); border-color: var(--accent); }
+  .refresh-btn.spinning { animation: spin 1s linear infinite; pointer-events: none; }
+  @keyframes spin { to { transform: rotate(360deg); } }
+
+  .live-badge {
+    display: flex; align-items: center; gap: 5px;
+    font-size: 11px; font-weight: 500;
+    color: var(--text-muted);
+    font-family: var(--mono);
+  }
+  .live-dot {
+    width: 6px; height: 6px; border-radius: 50%;
+    background: var(--green);
+    box-shadow: 0 0 5px rgba(61,214,140,0.6);
+    animation: pulse 2s ease infinite;
+  }
+  .live-dot.error { background: var(--red); box-shadow: 0 0 5px rgba(255,107,107,0.6); }
+  .live-dot.loading { background: var(--amber); box-shadow: 0 0 5px rgba(255,181,71,0.6); }
+
+  /* ── CONTENT ── */
+  .content {
+    padding: 28px;
+    flex: 1;
+  }
+
+  /* ── KPI STRIP ── */
+  .kpi-strip {
+    display: grid;
+    grid-template-columns: repeat(6, 1fr);
+    gap: 12px;
+    margin-bottom: 28px;
+    animation: fadeUp 0.5s ease both;
+  }
+
+  .kpi-card {
+    background: var(--card-bg);
+    border: 1px solid var(--card-border);
+    border-radius: 10px;
+    padding: 16px 18px;
+    transition: all 0.2s ease;
+  }
+
+  .kpi-card:hover {
+    border-color: var(--accent);
+    transform: translateY(-2px);
+    box-shadow: 0 8px 24px rgba(0,0,0,0.3);
+  }
+
+  .kpi-label {
+    font-size: 10px;
+    font-weight: 600;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--text-muted);
+    margin-bottom: 8px;
+  }
+
+  .kpi-value {
+    font-size: 28px;
+    font-weight: 700;
+    line-height: 1;
+    letter-spacing: -0.02em;
+  }
+
+  .kpi-value.total { color: var(--text-primary); }
+  .kpi-value.open { color: var(--accent); }
+  .kpi-value.red { color: var(--red); }
+  .kpi-value.amber { color: var(--amber); }
+  .kpi-value.green { color: var(--green); }
+  .kpi-value.risk { color: #f9a84f; }
+
+  .kpi-sub {
+    font-size: 11px;
+    color: var(--text-muted);
+    margin-top: 4px;
+  }
+
+  /* ── RISKS SECTION ── */
+  .section-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 14px;
+  }
+
+  .section-title {
+    font-size: 13px;
+    font-weight: 600;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    color: var(--text-secondary);
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+
+  .section-title .pulse-dot {
+    width: 7px; height: 7px;
+    border-radius: 50%;
+    background: var(--red);
+    animation: pulse 2s ease infinite;
+  }
+
+  @keyframes pulse {
+    0%, 100% { opacity: 1; transform: scale(1); }
+    50% { opacity: 0.5; transform: scale(0.85); }
+  }
+
+  .risks-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(360px, 1fr));
+    gap: 12px;
+    margin-bottom: 32px;
+    animation: fadeUp 0.5s 0.1s ease both;
+  }
+
+  .risk-card {
+    background: var(--card-bg);
+    border: 1px solid var(--card-border);
+    border-radius: 10px;
+    padding: 16px 18px;
+    display: flex;
+    gap: 14px;
+    transition: all 0.2s ease;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .risk-card::before {
+    content: '';
+    position: absolute;
+    left: 0; top: 0; bottom: 0;
+    width: 3px;
+  }
+
+  .risk-card.red::before { background: var(--red); }
+  .risk-card.amber::before { background: var(--amber); }
+
+  .risk-card:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 24px rgba(0,0,0,0.3);
+  }
+
+  .risk-card.red { border-color: rgba(240,84,84,0.25); }
+  .risk-card.amber { border-color: rgba(245,166,35,0.25); }
+
+  .risk-icon {
+    width: 36px; height: 36px;
+    border-radius: 8px;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 16px;
+    flex-shrink: 0;
+    margin-top: 2px;
+  }
+
+  .risk-icon.red { background: var(--red-bg); }
+  .risk-icon.amber { background: var(--amber-bg); }
+
+  .risk-content { flex: 1; min-width: 0; }
+
+  .risk-name {
+    font-size: 13px;
+    font-weight: 600;
+    color: var(--text-primary);
+    margin-bottom: 3px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+
+  .risk-meta {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin-bottom: 8px;
+    flex-wrap: wrap;
+  }
+
+  .risk-update {
+    font-size: 12px;
+    color: var(--text-secondary);
+    line-height: 1.5;
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+  }
+
+  /* ── FILTER BAR ── */
+  .filter-bar {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    margin-bottom: 20px;
+    flex-wrap: wrap;
+    animation: fadeUp 0.5s 0.15s ease both;
+  }
+
+  .filter-btn {
+    padding: 7px 14px;
+    border-radius: 6px;
+    font-size: 12px;
+    font-weight: 500;
+    font-family: var(--font);
+    cursor: pointer;
+    border: 1px solid var(--navy-border);
+    background: var(--navy-mid);
+    color: var(--text-secondary);
+    transition: all 0.15s ease;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+  }
+
+  .filter-btn:hover { border-color: var(--accent); color: var(--text-primary); }
+
+  .filter-btn.active {
+    background: var(--accent-dim);
+    border-color: var(--accent);
+    color: var(--accent);
+  }
+
+  .filter-btn.active.red-filter { background: var(--red-bg); border-color: var(--red); color: var(--red); }
+  .filter-btn.active.amber-filter { background: var(--amber-bg); border-color: var(--amber); color: var(--amber); }
+  .filter-btn.active.green-filter { background: var(--green-bg); border-color: var(--green); color: var(--green); }
+
+  .filter-count {
+    font-family: var(--mono);
+    font-size: 10px;
+    background: rgba(255,255,255,0.08);
+    padding: 1px 5px;
+    border-radius: 3px;
+  }
+
+  .search-wrap {
+    margin-left: auto;
+    position: relative;
+  }
+
+  .search-input {
+    background: var(--navy-mid);
+    border: 1px solid var(--navy-border);
+    border-radius: 7px;
+    padding: 7px 12px 7px 32px;
+    font-size: 12px;
+    font-family: var(--font);
+    color: var(--text-primary);
+    width: 200px;
+    outline: none;
+    transition: all 0.2s;
+  }
+
+  .search-input::placeholder { color: var(--text-muted); }
+
+  .search-input:focus {
+    border-color: var(--accent);
+    background: var(--card-bg);
+    width: 240px;
+  }
+
+  .search-icon {
+    position: absolute;
+    left: 10px; top: 50%;
+    transform: translateY(-50%);
+    color: var(--text-muted);
+    font-size: 12px;
+    pointer-events: none;
+  }
+
+  /* ── PROJECTS GRID ── */
+  .projects-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+    gap: 14px;
+    animation: fadeUp 0.5s 0.2s ease both;
+  }
+
+  .proj-card {
+    background: var(--card-bg);
+    border: 1px solid var(--card-border);
+    border-radius: 10px;
+    padding: 18px;
+    transition: all 0.2s ease;
+    cursor: default;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .proj-card::after {
+    content: '';
+    position: absolute;
+    top: 0; left: 0; right: 0;
+    height: 2px;
+    opacity: 0;
+    transition: opacity 0.2s;
+  }
+
+  .proj-card.rag-Red::after { background: var(--red); }
+  .proj-card.rag-Amber::after { background: var(--amber); }
+  .proj-card.rag-Green::after { background: var(--green); }
+
+  .proj-card:hover {
+    background: var(--card-hover);
+    border-color: var(--navy-light);
+    transform: translateY(-2px);
+    box-shadow: 0 12px 32px rgba(0,0,0,0.35);
+  }
+
+  .proj-card:hover::after { opacity: 1; }
+
+  .proj-card-top {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: 8px;
+  }
+
+  .proj-name {
+    font-size: 13px;
+    font-weight: 600;
+    color: var(--text-primary);
+    line-height: 1.4;
+    flex: 1;
+  }
+
+  .rag-dot {
+    width: 10px; height: 10px;
+    border-radius: 50%;
+    flex-shrink: 0;
+    margin-top: 3px;
+  }
+
+  .rag-dot.Red { background: var(--red); box-shadow: 0 0 6px rgba(240,84,84,0.6); }
+  .rag-dot.Amber { background: var(--amber); box-shadow: 0 0 6px rgba(245,166,35,0.6); }
+  .rag-dot.Green { background: var(--green); box-shadow: 0 0 6px rgba(39,174,116,0.5); }
+  .rag-dot.unknown { background: var(--text-muted); }
+
+  .proj-meta {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    flex-wrap: wrap;
+  }
+
+  .badge {
+    font-size: 10px;
+    font-weight: 600;
+    letter-spacing: 0.04em;
+    padding: 3px 7px;
+    border-radius: 4px;
+    font-family: var(--mono);
+  }
+
+  .badge-phase {
+    background: rgba(79,156,249,0.1);
+    color: #7ab8fb;
+    border: 1px solid rgba(79,156,249,0.2);
+  }
+
+  .badge-status {
+    border: 1px solid;
+  }
+
+  .badge-status.Open { background: rgba(79,156,249,0.08); color: var(--accent); border-color: rgba(79,156,249,0.25); }
+  .badge-status.Closed { background: rgba(122,155,191,0.06); color: var(--text-muted); border-color: rgba(122,155,191,0.15); }
+  .badge-status.Paused { background: rgba(245,166,35,0.08); color: var(--amber); border-color: rgba(245,166,35,0.2); }
+  .badge-status.other { background: rgba(122,155,191,0.06); color: var(--text-muted); border-color: rgba(122,155,191,0.15); }
+
+  .badge-budget {
+    font-size: 10px;
+    font-weight: 600;
+    letter-spacing: 0.03em;
+    padding: 3px 7px;
+    border-radius: 4px;
+  }
+
+  .badge-budget.exceed {
+    background: rgba(240,84,84,0.1);
+    color: var(--red);
+    border: 1px solid rgba(240,84,84,0.25);
+  }
+
+  .badge-budget.onbudget {
+    background: transparent;
+    color: var(--text-muted);
+    border: 1px solid transparent;
+    display: none;
+  }
+
+  .proj-row {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 12px;
+  }
+
+  .proj-row-label {
+    color: var(--text-muted);
+    width: 28px;
+    flex-shrink: 0;
+  }
+
+  .proj-row-val {
+    color: var(--text-secondary);
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+
+  .proj-row-val.eta {
+    font-family: var(--mono);
+    font-size: 11px;
+  }
+
+  .divider {
+    height: 1px;
+    background: var(--navy-border);
+    opacity: 0.5;
+  }
+
+  .proj-update {
+    font-size: 11.5px;
+    color: var(--text-muted);
+    line-height: 1.55;
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+    transition: all 0.2s;
+  }
+
+  .proj-update.expanded {
+    -webkit-line-clamp: unset;
+    display: block;
+  }
+
+  .expand-btn {
+    font-size: 10px;
+    color: var(--accent);
+    cursor: pointer;
+    background: none;
+    border: none;
+    padding: 0;
+    font-family: var(--font);
+    margin-top: 3px;
+    opacity: 0.8;
+    transition: opacity 0.15s;
+  }
+
+  .expand-btn:hover { opacity: 1; }
+
+  .no-update {
+    font-size: 11px;
+    color: var(--text-muted);
+    font-style: italic;
+    opacity: 0.5;
+  }
+
+  /* ── FOOTER ── */
+  .footer {
+    margin-top: 40px;
+    padding: 20px 28px;
+    border-top: 1px solid var(--navy-border);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    font-size: 11px;
+    color: var(--text-muted);
+  }
+
+  .footer-left { display: flex; align-items: center; gap: 16px; }
+
+  .footer-source {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+  }
+
+  .footer-dot {
+    width: 5px; height: 5px;
+    border-radius: 50%;
+    background: var(--accent);
+    opacity: 0.5;
+  }
+
+  /* ── PM CHART SECTION ── */
+  .pm-section {
+    margin-bottom: 32px;
+    animation: fadeUp 0.5s 0.12s ease both;
+  }
+
+  .pm-bars {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+  }
+
+  .pm-bar-row {
+    display: grid;
+    grid-template-columns: 130px 1fr 40px;
+    align-items: center;
+    gap: 10px;
+  }
+
+  .pm-name {
+    font-size: 12px;
+    color: var(--text-secondary);
+    text-align: right;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+
+  .pm-bar-track {
+    height: 6px;
+    background: var(--navy-light);
+    border-radius: 3px;
+    overflow: hidden;
+  }
+
+  .pm-bar-fill {
+    height: 100%;
+    border-radius: 3px;
+    background: linear-gradient(90deg, var(--accent), #2563eb);
+    transition: width 1s cubic-bezier(0.4,0,0.2,1);
+  }
+
+  .pm-count {
+    font-family: var(--mono);
+    font-size: 11px;
+    color: var(--text-muted);
+    text-align: right;
+  }
+
+  /* ── YEAR BADGE ── */
+  .badge-year {
+    font-family: var(--mono);
+    font-size: 10px;
+    font-weight: 600;
+    padding: 2px 7px;
+    border-radius: 4px;
+    border: 1px solid;
+  }
+  .badge-year.y2024 { color: #7ab8fb; border-color: rgba(122,184,251,0.3); background: rgba(122,184,251,0.08); }
+  .badge-year.y2025 { color: #a78bfa; border-color: rgba(167,139,250,0.3); background: rgba(167,139,250,0.08); }
+  .badge-year.y2026 { color: #34d399; border-color: rgba(52,211,153,0.3); background: rgba(52,211,153,0.08); }
+  .badge-year.ymulti { color: var(--text-muted); border-color: var(--navy-border); background: transparent; }
+
+  .badge-entity {
+    font-size: 10px;
+    font-weight: 700;
+    letter-spacing: 0.06em;
+    padding: 3px 7px;
+    border-radius: 4px;
+    font-family: var(--mono);
+    border: 1px solid;
+    text-transform: uppercase;
+  }
+  .badge-entity.ERP  { color: #60c8f5; border-color: rgba(96,200,245,0.3); background: rgba(96,200,245,0.1); }
+  .badge-entity.ZG   { color: #c084fc; border-color: rgba(192,132,252,0.3); background: rgba(192,132,252,0.1); }
+  .badge-entity.ZTF  { color: #fb923c; border-color: rgba(251,146,60,0.3);  background: rgba(251,146,60,0.1); }
+  .badge-entity.ZDF  { color: #4ade80; border-color: rgba(74,222,128,0.3);  background: rgba(74,222,128,0.1); }
+
+  .year-kpi {
+    flex: 1; min-width: 180px;
+    background: var(--card-bg);
+    border: 1px solid var(--card-border);
+    border-radius: 10px;
+    padding: 18px 20px;
+    transition: all 0.2s;
+    cursor: pointer;
+  }
+  .year-kpi:hover { transform: translateY(-2px); box-shadow: 0 8px 24px rgba(0,0,0,0.3); }
+  .year-kpi.y2024 { border-top: 3px solid #7ab8fb; }
+  .year-kpi.y2025 { border-top: 3px solid #a78bfa; }
+  .year-kpi.y2026 { border-top: 3px solid #34d399; }
+
+  .year-kpi-title {
+    font-family: var(--mono);
+    font-size: 18px;
+    font-weight: 700;
+    margin-bottom: 10px;
+  }
+  .year-kpi.y2024 .year-kpi-title { color: #7ab8fb; }
+  .year-kpi.y2025 .year-kpi-title { color: #a78bfa; }
+  .year-kpi.y2026 .year-kpi-title { color: #34d399; }
+
+  .year-kpi-stats {
+    display: flex;
+    gap: 16px;
+    flex-wrap: wrap;
+  }
+
+  .year-stat { text-align: center; }
+  .year-stat-val { font-size: 20px; font-weight: 700; line-height: 1; }
+  .year-stat-lbl { font-size: 10px; color: var(--text-muted); margin-top: 2px; text-transform: uppercase; letter-spacing: 0.06em; }
+
+  .year-rag-mini {
+    display: flex;
+    gap: 8px;
+    margin-top: 10px;
+    flex-wrap: wrap;
+  }
+
+  .rag-chip {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    font-size: 11px;
+    padding: 3px 8px;
+    border-radius: 4px;
+    font-weight: 500;
+  }
+  .rag-chip.Red { background: var(--red-bg); color: var(--red); }
+  .rag-chip.Amber { background: var(--amber-bg); color: var(--amber); }
+  .rag-chip.Green { background: var(--green-bg); color: var(--green); }
+
+  /* ── EMPTY STATE ── */
+  .empty-state {
+    grid-column: 1 / -1;
+    text-align: center;
+    padding: 60px 20px;
+    color: var(--text-muted);
+  }
+
+  .empty-icon { font-size: 32px; margin-bottom: 12px; opacity: 0.3; }
+  .empty-text { font-size: 14px; }
+
+  /* ── ANIMATIONS ── */
+  @keyframes fadeUp {
+    from { opacity: 0; transform: translateY(12px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  /* ── SCROLLBAR ── */
+  ::-webkit-scrollbar { width: 6px; height: 6px; }
+  ::-webkit-scrollbar-track { background: var(--navy-mid); }
+  ::-webkit-scrollbar-thumb { background: var(--navy-border); border-radius: 3px; }
+  ::-webkit-scrollbar-thumb:hover { background: var(--navy-light); }
+
+  /* ── RESPONSIVE ── */
+  @media (max-width: 1200px) {
+    .kpi-strip { grid-template-columns: repeat(3, 1fr); }
+  }
+
+  @media (max-width: 900px) {
+    .sidebar { display: none; }
+    .main { margin-left: 0; }
+    .kpi-strip { grid-template-columns: repeat(2, 1fr); }
+  }
+</style>
+</head>
+<body>
+
+<!-- SIDEBAR -->
+<aside class="sidebar">
+  <div class="sidebar-logo">
+    <div class="logo-mark">
+      <div class="logo-icon" style="font-size:11px;letter-spacing:0">ZTF</div>
+      <div>
+        <div class="logo-text">ZTF PMO Hub</div>
+        <div class="logo-sub">Program Portfolio</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="sidebar-section">
+    <div class="sidebar-label">Workspace</div>
+    <nav class="sidebar-nav">
+      <button class="nav-item active" id="tab-active" onclick="setTab('active')">
+        <svg class="nav-icon" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5">
+          <circle cx="8" cy="8" r="6"/><path d="M8 5v3.5l2 1.5"/>
+        </svg>
+        2026 Active
+        <span style="margin-left:auto;font-family:var(--mono);font-size:10px;background:rgba(52,211,153,0.15);color:#34d399;padding:1px 6px;border-radius:3px" id="tab-active-count">—</span>
+      </button>
+      <button class="nav-item" id="tab-archive" onclick="setTab('archive')">
+        <svg class="nav-icon" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5">
+          <rect x="1" y="4" width="14" height="10" rx="1.5"/><path d="M1 4l2-3h10l2 3"/>
+          <path d="M6 8h4"/>
+        </svg>
+        Archive
+        <span style="margin-left:auto;font-family:var(--mono);font-size:10px;background:rgba(122,155,191,0.1);color:var(--text-muted);padding:1px 6px;border-radius:3px" id="tab-archive-count">—</span>
+      </button>
+    </nav>
+  </div>
+
+  <div class="sidebar-section">
+    <div class="sidebar-label">Views</div>
+    <nav class="sidebar-nav">
+      <button class="nav-item active" id="nav-dashboard" onclick="showView('dashboard')">
+        <svg class="nav-icon" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5">
+          <rect x="1" y="1" width="6" height="6" rx="1.5"/><rect x="9" y="1" width="6" height="6" rx="1.5"/>
+          <rect x="1" y="9" width="6" height="6" rx="1.5"/><rect x="9" y="9" width="6" height="6" rx="1.5"/>
+        </svg>
+        Dashboard
+      </button>
+      <button class="nav-item" id="nav-risks" onclick="showView('risks')">
+        <svg class="nav-icon" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5">
+          <path d="M8 1l7 13H1L8 1z"/><path d="M8 6v4M8 11.5v.5"/>
+        </svg>
+        Risks &amp; Attention
+      </button>
+      <button class="nav-item" id="nav-pm" onclick="showView('pm')">
+        <svg class="nav-icon" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5">
+          <circle cx="5" cy="5" r="2.5"/><circle cx="11" cy="5" r="2.5"/>
+          <path d="M1 14c0-2.5 1.8-4 4-4s4 1.5 4 4"/><path d="M11 10c2.2 0 4 1.5 4 4"/>
+        </svg>
+        By PM
+      </button>
+      <button class="nav-item" id="nav-year" onclick="showView('year')">
+        <svg class="nav-icon" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5">
+          <rect x="1" y="3" width="14" height="11" rx="1.5"/>
+          <path d="M5 1v4M11 1v4M1 7h14"/>
+        </svg>
+        By Year
+      </button>
+    </nav>
+  </div>
+
+  <div class="sidebar-section">
+    <div class="sidebar-label">Filter by RAG</div>
+    <nav class="sidebar-nav">
+      <button class="nav-item" id="sb-all" onclick="setRagFilter('All')">
+        <span style="width:8px;height:8px;border-radius:50%;background:var(--text-muted);display:inline-block;flex-shrink:0"></span>
+        All Projects
+      </button>
+      <button class="nav-item" id="sb-red" onclick="setRagFilter('Red')">
+        <span style="width:8px;height:8px;border-radius:50%;background:var(--red);display:inline-block;flex-shrink:0;box-shadow:0 0 5px rgba(240,84,84,0.6)"></span>
+        Red
+      </button>
+      <button class="nav-item" id="sb-amber" onclick="setRagFilter('Amber')">
+        <span style="width:8px;height:8px;border-radius:50%;background:var(--amber);display:inline-block;flex-shrink:0;box-shadow:0 0 5px rgba(245,166,35,0.5)"></span>
+        Amber
+      </button>
+      <button class="nav-item" id="sb-green" onclick="setRagFilter('Green')">
+        <span style="width:8px;height:8px;border-radius:50%;background:var(--green);display:inline-block;flex-shrink:0;box-shadow:0 0 5px rgba(39,174,116,0.4)"></span>
+        Green
+      </button>
+    </nav>
+  </div>
+
+  <div class="sidebar-section">
+    <div class="sidebar-label">Filter by Entity</div>
+    <nav class="sidebar-nav">
+      <button class="nav-item" id="sb-ent-all" onclick="setEntityFilter('All')">
+        <span style="font-family:var(--mono);font-size:10px;color:var(--text-muted);flex-shrink:0">ALL</span>
+        All Entities
+      </button>
+      <button class="nav-item" id="sb-ent-erp" onclick="setEntityFilter('ERP')">
+        <span style="font-family:var(--mono);font-size:10px;color:#60c8f5;flex-shrink:0">ERP</span>
+        ERP
+      </button>
+      <button class="nav-item" id="sb-ent-zg" onclick="setEntityFilter('ZG')">
+        <span style="font-family:var(--mono);font-size:10px;color:#c084fc;flex-shrink:0">ZG</span>
+        ZG
+      </button>
+      <button class="nav-item" id="sb-ent-ztf" onclick="setEntityFilter('ZTF')">
+        <span style="font-family:var(--mono);font-size:10px;color:#fb923c;flex-shrink:0">ZTF</span>
+        ZTF
+      </button>
+      <button class="nav-item" id="sb-ent-zdf" onclick="setEntityFilter('ZDF')">
+        <span style="font-family:var(--mono);font-size:10px;color:#4ade80;flex-shrink:0">ZDF</span>
+        ZDF
+      </button>
+    </nav>
+  </div>
+
+  <div class="sidebar-footer">
+    <div>Source: Currently Active Programs</div>
+    <div style="margin-top:4px;font-family:var(--mono);font-size:10px;">Generated May 6, 2026</div>
+  </div>
+</aside>
+
+<!-- MAIN -->
+<main class="main">
+
+  <!-- HEADER -->
+  <header class="header">
+    <div class="header-left">
+      <div class="header-title">ZTF PMO Hub</div>
+      <div class="header-sub">Program Portfolio · C-Level Overview</div>
+    </div>
+    <div class="header-right">
+      <div class="live-badge">
+        <div class="live-dot" id="live-dot"></div>
+        <span id="live-status">Data as of __UPDATED__</span>
+      </div>
+      <div class="date-badge" id="last-updated">__UPDATED__</div>
+    </div>
+  </header>
+
+  <div class="content">
+
+    <!-- KPI STRIP -->
+    <div class="kpi-strip" id="kpi-strip">
+      <div class="kpi-card">
+        <div class="kpi-label">Total Programs</div>
+        <div class="kpi-value total" id="kpi-total">—</div>
+        <div class="kpi-sub">in portfolio</div>
+      </div>
+      <div class="kpi-card">
+        <div class="kpi-label">Active / Open</div>
+        <div class="kpi-value open" id="kpi-open">—</div>
+        <div class="kpi-sub">in execution</div>
+      </div>
+      <div class="kpi-card">
+        <div class="kpi-label">🔴 Red</div>
+        <div class="kpi-value red" id="kpi-red">—</div>
+        <div class="kpi-sub">require escalation</div>
+      </div>
+      <div class="kpi-card">
+        <div class="kpi-label">🟡 Amber</div>
+        <div class="kpi-value amber" id="kpi-amber">—</div>
+        <div class="kpi-sub">need attention</div>
+      </div>
+      <div class="kpi-card">
+        <div class="kpi-label">🟢 Green</div>
+        <div class="kpi-value green" id="kpi-green">—</div>
+        <div class="kpi-sub">on track</div>
+      </div>
+      <div class="kpi-card">
+        <div class="kpi-label">Budget Risk</div>
+        <div class="kpi-value risk" id="kpi-budget">—</div>
+        <div class="kpi-sub">exceeded budget</div>
+      </div>
+    </div>
+
+    <!-- VIEW: DASHBOARD -->
+    <div id="view-dashboard">
+
+      <!-- RISKS & ATTENTION -->
+      <div id="risks-section">
+        <div class="section-header">
+          <div class="section-title">
+            <span class="pulse-dot"></span>
+            Risks &amp; Attention Required
+          </div>
+        </div>
+        <div class="risks-grid" id="risks-grid"></div>
+      </div>
+
+      <!-- ALL PROJECTS -->
+      <div class="section-header">
+        <div class="section-title" style="margin-bottom:0">
+          <svg width="14" height="14" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" style="opacity:0.6">
+            <rect x="1" y="1" width="6" height="6" rx="1.5"/><rect x="9" y="1" width="6" height="6" rx="1.5"/>
+            <rect x="1" y="9" width="6" height="6" rx="1.5"/><rect x="9" y="9" width="6" height="6" rx="1.5"/>
+          </svg>
+          All Programs
+        </div>
+      </div>
+
+      <!-- FILTER BAR -->
+      <div class="filter-bar" id="filter-bar">
+        <button class="filter-btn active" data-filter="All" onclick="setFilter('All',this)">
+          All <span class="filter-count" id="fc-all">0</span>
+        </button>
+        <button class="filter-btn red-filter" data-filter="Red" onclick="setFilter('Red',this)">
+          <span style="width:7px;height:7px;border-radius:50%;background:var(--red);display:inline-block"></span>
+          Red <span class="filter-count" id="fc-red">0</span>
+        </button>
+        <button class="filter-btn amber-filter" data-filter="Amber" onclick="setFilter('Amber',this)">
+          <span style="width:7px;height:7px;border-radius:50%;background:var(--amber);display:inline-block"></span>
+          Amber <span class="filter-count" id="fc-amber">0</span>
+        </button>
+        <button class="filter-btn green-filter" data-filter="Green" onclick="setFilter('Green',this)">
+          <span style="width:7px;height:7px;border-radius:50%;background:var(--green);display:inline-block"></span>
+          Green <span class="filter-count" id="fc-green">0</span>
+        </button>
+        <button class="filter-btn" data-filter="Open" onclick="setFilter('Open',this)">
+          Open <span class="filter-count" id="fc-open">0</span>
+        </button>
+        <button class="filter-btn" data-filter="Paused" onclick="setFilter('Paused',this)">
+          Paused <span class="filter-count" id="fc-paused">0</span>
+        </button>
+        <div style="width:1px;height:20px;background:var(--navy-border);margin:0 4px"></div>
+        <button class="filter-btn year-filter" data-yearfilter="2024" onclick="setYearFromBar('2024',this)" style="color:#7ab8fb">
+          2024 <span class="filter-count" id="fc-2024">0</span>
+        </button>
+        <button class="filter-btn year-filter" data-yearfilter="2025" onclick="setYearFromBar('2025',this)" style="color:#a78bfa">
+          2025 <span class="filter-count" id="fc-2025">0</span>
+        </button>
+        <button class="filter-btn year-filter" data-yearfilter="2026" onclick="setYearFromBar('2026',this)" style="color:#34d399">
+          2026 <span class="filter-count" id="fc-2026">0</span>
+        </button>
+        <div style="width:1px;height:20px;background:var(--navy-border);margin:0 4px"></div>
+        <button class="filter-btn entity-filter" data-entityfilter="ERP" onclick="setEntityFromBar('ERP',this)" style="color:#60c8f5">
+          ERP <span class="filter-count" id="fc-erp">0</span>
+        </button>
+        <button class="filter-btn entity-filter" data-entityfilter="ZG" onclick="setEntityFromBar('ZG',this)" style="color:#c084fc">
+          ZG <span class="filter-count" id="fc-zg">0</span>
+        </button>
+        <button class="filter-btn entity-filter" data-entityfilter="ZTF" onclick="setEntityFromBar('ZTF',this)" style="color:#fb923c">
+          ZTF <span class="filter-count" id="fc-ztf">0</span>
+        </button>
+        <button class="filter-btn entity-filter" data-entityfilter="ZDF" onclick="setEntityFromBar('ZDF',this)" style="color:#4ade80">
+          ZDF <span class="filter-count" id="fc-zdf">0</span>
+        </button>
+        <div class="search-wrap">
+          <span class="search-icon">🔍</span>
+          <input class="search-input" type="text" placeholder="Search projects…" id="search-input" oninput="renderCards()">
+        </div>
+      </div>
+
+      <div class="projects-grid" id="projects-grid"></div>
+    </div>
+
+    <!-- VIEW: RISKS ONLY -->
+    <div id="view-risks" style="display:none">
+      <div class="section-header">
+        <div class="section-title">
+          <span class="pulse-dot"></span>
+          Red &amp; Amber Projects — Full Detail
+        </div>
+      </div>
+      <div class="risks-grid" id="risks-grid-full"></div>
+    </div>
+
+    <!-- VIEW: BY YEAR -->
+    <div id="view-year" style="display:none">
+      <div class="section-header" style="margin-bottom:20px">
+        <div class="section-title">
+          <svg width="14" height="14" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" style="opacity:0.6">
+            <rect x="1" y="3" width="14" height="11" rx="1.5"/><path d="M5 1v4M11 1v4M1 7h14"/>
+          </svg>
+          Programs by Year
+        </div>
+      </div>
+      <div id="year-summary-strip" style="display:flex;gap:12px;margin-bottom:28px;flex-wrap:wrap"></div>
+      <div style="display:flex;gap:8px;margin-bottom:12px;flex-wrap:wrap" id="year-tab-bar">
+        <button class="filter-btn active" data-ytab="all" onclick="setYearTab('all')">All Years</button>
+        <button class="filter-btn" data-ytab="2024" onclick="setYearTab('2024')" style="color:#7ab8fb">2024</button>
+        <button class="filter-btn" data-ytab="2025" onclick="setYearTab('2025')" style="color:#a78bfa">2025</button>
+        <button class="filter-btn" data-ytab="2026" onclick="setYearTab('2026')" style="color:#34d399">2026</button>
+      </div>
+      <div id="year-entity-bar" style="display:none;gap:6px;margin-bottom:20px;flex-wrap:wrap;align-items:center">
+        <span style="font-size:10px;font-weight:600;letter-spacing:0.1em;text-transform:uppercase;color:var(--text-muted);margin-right:4px">Entity:</span>
+        <button class="filter-btn active" data-yent="All" onclick="setYearEntityFilter('All',this)">All</button>
+        <button class="filter-btn" data-yent="ERP" onclick="setYearEntityFilter('ERP',this)" style="color:#60c8f5">ERP <span class="filter-count" id="yfc-erp">0</span></button>
+        <button class="filter-btn" data-yent="ZG" onclick="setYearEntityFilter('ZG',this)" style="color:#c084fc">ZG <span class="filter-count" id="yfc-zg">0</span></button>
+        <button class="filter-btn" data-yent="ZTF" onclick="setYearEntityFilter('ZTF',this)" style="color:#fb923c">ZTF <span class="filter-count" id="yfc-ztf">0</span></button>
+        <button class="filter-btn" data-yent="ZDF" onclick="setYearEntityFilter('ZDF',this)" style="color:#4ade80">ZDF <span class="filter-count" id="yfc-zdf">0</span></button>
+      </div>
+      <div class="projects-grid" id="year-projects-grid"></div>
+    </div>
+
+    <!-- VIEW: BY PM -->
+    <div id="view-pm" style="display:none">
+      <div class="section-header" style="margin-bottom:20px">
+        <div class="section-title">
+          <svg width="14" height="14" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" style="opacity:0.6">
+            <circle cx="5" cy="5" r="2.5"/><circle cx="11" cy="5" r="2.5"/>
+            <path d="M1 14c0-2.5 1.8-4 4-4s4 1.5 4 4"/><path d="M11 10c2.2 0 4 1.5 4 4"/>
+          </svg>
+          Workload by Project Manager
+        </div>
+      </div>
+      <div class="pm-section">
+        <div class="pm-bars" id="pm-bars"></div>
+      </div>
+      <div class="projects-grid" id="pm-projects-grid"></div>
+    </div>
+
+  </div><!-- /content -->
+
+  <footer class="footer">
+    <div class="footer-left">
+      <div class="footer-source">
+        <div class="footer-dot"></div>
+        Source: Currently Active Programs (Google Sheets)
+      </div>
+      <div>Generated: May 6, 2026</div>
+    </div>
+    <div>© ZTF PMO Hub</div>
+  </footer>
+
+</main>
+
+<script>
+const PROJECTS = __PROJECTS_DATA__;
+
+// ── YEAR ASSIGNMENT ──
+// Primary year = most prominent year from ETA / revised ETA / start date / update text
+// Logic: if ETA or revised ETA has a year, use the latest of those; else use start; else latest from update
+const YEAR_MAP = {
+  "Partner Process Transformation": "2024",
+  "Phoenix Program": "2026",
+  "Steering Reporting and Planning - Phase 2": "2024",
+  "Steering Reporting and Planning - Phase 3": "2024",
+  "E-Signature Tool": "2025",
+  "RedShift Migration": "2025",
+  "Oracle Phase-Out & Migration": "2024",
+  "ICM": "2024",
+  "ICM Raw Data for Analytics": "2024",
+  "S/4HANA Expanded Sweep Archiving (Phase 4)": "2024",
+  "VAT Compliant Reporting": "2026",
+  "Databricks Cost Efficiency Initiative": "2025",
+  "The ERP Technology Strategy": "2024",
+  "[VAT Upgrade] Deemed-Supplier Sales Compliance": "2024",
+  "[VAT Upgrade] Scalable and Compliant Customer Invoicing": "2024",
+  "Corporate Sustainability Reporting Directive (CSRD)": "2025",
+  "Premium Engagement of SAP": "2026",
+  "User Experience in SAP ERP": "2025",
+  "AWS Lighthouse": "2024",
+  "ICM Enhancement": "2025",
+  "VIM Upgrade": "2025",
+  "Stores Re-Design (Offprice)": "2025",
+  "PMDM": "2025",
+  "ICM EaseOps": "2025",
+  "DAC 7 Online Sales Tax Reporting": "2025",
+  "S/4HANA Upgrade 2025": "2025",
+  "Month-End Closing Process Reengineering": "2025",
+  "Real Estate Management Extension Project": "2025",
+  "E2E Business Travel Optimization Project": "2026",
+  "Danoub M2": "2025",
+  "Partner Stock Management": "2025",
+  "Databricks - Unity Catalog": "2026",
+  "BI Tooling Strategy": "2025",
+  "SAP S4HANA Clean Core '25": "2025",
+  "ERPE Knowledge Base and Documentation": "2025",
+  "Fashion Store Expansion": "2026",
+  "Debit Note Automation": "2025",
+  "Real Estate Management Lease Out Project (V2)": "2026",
+  "WOW and Confluence Knowledge Base and Documentation": "2025",
+  "SRP Stock Ownership": "2025",
+  "ERPE Innovation Fund (BTP Integration Suite & BTP CAP)": "2025",
+  "O2C Process Improvements - O2C+": "2025",
+  "OTC Improvements Project - Reporting": "2025",
+  "PPM Change Ambassador": "2026",
+  "Customer Data Access": "2026",
+  "User Experience Phase 2": "2025",
+  "Jira & SolMan ChaRM Integration": "2025",
+  "CALM": "2025",
+  "DAC2025": "2026",
+  "GRC Tool": "2025",
+  "Fiori Fusion": "2025",
+  "Spay": "2026",
+  "ERPE Innovation Fund (BTP gCTS CI/CD)": "2025",
+  "EPR Category Classification - Phase 2": "2026",
+  "ZxAY Orbit Project - PMO Body for Engineering Team": "2026",
+  "Archiving Project": "2026",
+  "E-Reporting (Poland KSeF)": "2026",
+  "SAP BDC Set Up & Migration (SAP BW4HANA PcE Migration)": "2026",
+  "DAC2025 (Ilker)": "2026",
+  "ICCM 1.0": "2026",
+  "ERP Innovation Fund - AI Initiatives": "2026",
+  "ERP Innovation Fund - Digital Core Acceleration": "2026",
+  "SAP Taulia Implementation": "2026",
+  "Orbit Cut-over": "2026",
+  "Databricks SQL Warehouse": "2026",
+  "ZSE MT940 to CAMT053 / ISO 20022": "2026",
+  "IC Cashless Settlement & Netting": "2026",
+  "ATT Migration": "2026",
+  "Print Materials for Jersey Customization M2": "2026"
+};
+
+// Attach year to each project (used for static fallback)
+PROJECTS.forEach(p => { p.year = YEAR_MAP[p.name] || '2025'; });
+
+// ── LIVE DATA ──
+const API = 'http://localhost:8765/api';
+const REFRESH_INTERVAL = 300; // seconds
+let refreshCountdown = REFRESH_INTERVAL;
+let refreshTimer = null;
+
+function setLiveStatus(state, text) {
+  const dot = document.getElementById('live-dot');
+  const lbl = document.getElementById('live-status');
+  dot.className = 'live-dot ' + (state === 'ok' ? '' : state);
+  lbl.textContent = text;
+}
+
+function formatTime(ts) {
+  if (!ts) return '—';
+  const d = new Date(ts * 1000);
+  return d.toLocaleTimeString([], {hour:'2-digit', minute:'2-digit'});
+}
+
+async function fetchData() {
+  try {
+    const r = await fetch(API + '/data');
+    if (!r.ok) throw new Error('HTTP ' + r.status);
+    const json = await r.json();
+    if (json.error && !json.projects) throw new Error(json.error);
+
+    // Merge live data into PROJECTS array
+    PROJECTS.length = 0;
+    json.projects.forEach(p => PROJECTS.push(p));
+
+    setLiveStatus('ok', 'Live · updated ' + formatTime(json.fetched_at));
+    document.getElementById('last-updated').textContent = formatTime(json.fetched_at);
+
+    rebuildAll();
+    return true;
+  } catch(e) {
+    setLiveStatus('error', 'Offline · using cached data');
+    return false;
+  }
+}
+
+async function manualRefresh() {
+  const btn = document.getElementById('refresh-btn');
+  btn.style.pointerEvents = 'none';
+  btn.innerHTML = '↻ Refreshing…';
+  setLiveStatus('loading', 'Refreshing…');
+  try {
+    await fetch(API + '/refresh');
+  } catch(e) {}
+  await fetchData();
+  btn.innerHTML = '↻ Refresh';
+  btn.style.pointerEvents = '';
+  refreshCountdown = REFRESH_INTERVAL;
+}
+
+function startCountdown() {
+  clearInterval(refreshTimer);
+  refreshCountdown = REFRESH_INTERVAL;
+  refreshTimer = setInterval(async () => {
+    refreshCountdown--;
+    if (refreshCountdown <= 0) {
+      refreshCountdown = REFRESH_INTERVAL;
+      setLiveStatus('loading', 'Refreshing…');
+      await fetchData();
+    } else {
+      const dot = document.getElementById('live-dot');
+      if (!dot.classList.contains('error')) {
+        const s = refreshCountdown;
+        const m = Math.floor(s/60), sec = s%60;
+        document.getElementById('live-status').textContent =
+          `Live · next in ${m}:${String(sec).padStart(2,'0')}`;
+      }
+    }
+  }, 1000);
+}
+
+function updateTabCounts() {
+  const active  = PROJECTS.filter(p => p.year === '2026' || p.status === 'Open' || p.status === 'Paused');
+  const archive = PROJECTS.filter(p =>
+    (p.year === '2024' || p.year === '2025') &&
+    (p.status === 'Closed' || p.status === 'Not Started' || p.status === 'Not Applicable' || p.status === 'Not Started yet')
+  );
+  document.getElementById('tab-active-count').textContent  = active.length;
+  document.getElementById('tab-archive-count').textContent = archive.length;
+}
+
+function rebuildAll() {
+  updateTabCounts();
+  initKPIs();
+  renderRisks();
+  renderCards();
+  if (currentView === 'pm')   renderPMView();
+  if (currentView === 'year') renderYearView();
+}
+
+let currentTab = 'active'; // 'active' = 2026 open/in-progress | 'archive' = 2024+2025 closed
+let currentFilter = 'All';
+let currentYearFilter = 'All';
+let currentEntityFilter = 'All';
+let currentView = 'dashboard';
+let currentYearTab = 'all';
+let currentYearEntityFilter = 'All';
+
+function getTabProjects() {
+  if (currentTab === 'active') {
+    // 2026 projects + any open projects from other years
+    return PROJECTS.filter(p => p.year === '2026' || p.status === 'Open' || p.status === 'Paused');
+  } else {
+    // Archive: closed projects from 2024 and 2025
+    return PROJECTS.filter(p =>
+      (p.year === '2024' || p.year === '2025') &&
+      (p.status === 'Closed' || p.status === 'Not Started' || p.status === 'Not Applicable' || p.status === 'Not Started yet')
+    );
+  }
+}
+
+function setTab(tab) {
+  currentTab = tab;
+  currentFilter = 'All';
+  currentYearFilter = 'All';
+  currentEntityFilter = 'All';
+  currentYearTab = 'all';
+  document.getElementById('tab-active').classList.toggle('active', tab === 'active');
+  document.getElementById('tab-archive').classList.toggle('active', tab === 'archive');
+  updateTabCounts();
+  rebuildAll();
+  showView(currentView);
+}
+
+function initKPIs() {
+  const tp = getTabProjects();
+  const total = tp.length;
+  const open = tp.filter(p => p.status === 'Open').length;
+  const red = tp.filter(p => p.rag === 'Red').length;
+  const amber = tp.filter(p => p.rag === 'Amber').length;
+  const green = tp.filter(p => p.rag === 'Green').length;
+  const budget = tp.filter(p => p.budget && p.budget.toLowerCase().includes('exceed')).length;
+
+  animateCount('kpi-total', total);
+  animateCount('kpi-open', open);
+  animateCount('kpi-red', red);
+  animateCount('kpi-amber', amber);
+  animateCount('kpi-green', green);
+  animateCount('kpi-budget', budget);
+
+  document.getElementById('fc-all').textContent = total;
+  document.getElementById('fc-red').textContent = red;
+  document.getElementById('fc-amber').textContent = amber;
+  document.getElementById('fc-green').textContent = green;
+  document.getElementById('fc-open').textContent = open;
+  document.getElementById('fc-paused').textContent = tp.filter(p => p.status === 'Paused').length;
+  document.getElementById('fc-2024').textContent = tp.filter(p => p.year === '2024').length;
+  document.getElementById('fc-2025').textContent = tp.filter(p => p.year === '2025').length;
+  document.getElementById('fc-2026').textContent = tp.filter(p => p.year === '2026').length;
+  document.getElementById('fc-erp').textContent = tp.filter(p => p.entity === 'ERP').length;
+  document.getElementById('fc-zg').textContent = tp.filter(p => p.entity === 'ZG').length;
+  document.getElementById('fc-ztf').textContent = tp.filter(p => p.entity === 'ZTF').length;
+  document.getElementById('fc-zdf').textContent = tp.filter(p => p.entity === 'ZDF').length;
+}
+
+function animateCount(id, target) {
+  const el = document.getElementById(id);
+  let start = 0;
+  const duration = 800;
+  const step = (timestamp) => {
+    if (!start) start = timestamp;
+    const progress = Math.min((timestamp - start) / duration, 1);
+    el.textContent = Math.floor(progress * target);
+    if (progress < 1) requestAnimationFrame(step);
+    else el.textContent = target;
+  };
+  requestAnimationFrame(step);
+}
+
+function makeRagBadge(rag) {
+  const cls = rag || 'unknown';
+  return `<span class="rag-dot ${cls}"></span>`;
+}
+
+function makeStatusBadge(status) {
+  let cls = 'other';
+  if (status === 'Open') cls = 'Open';
+  else if (status === 'Closed') cls = 'Closed';
+  else if (status === 'Paused') cls = 'Paused';
+  return `<span class="badge badge-status ${cls}">${status || '—'}</span>`;
+}
+
+function makePhaseBadge(phase) {
+  if (!phase) return '';
+  return `<span class="badge badge-phase">${phase}</span>`;
+}
+
+function makeBudgetBadge(budget) {
+  if (!budget) return '';
+  if (budget.toLowerCase().includes('exceed')) {
+    return `<span class="badge badge-budget exceed">⚠ Exceeded</span>`;
+  }
+  return '';
+}
+
+function makeEntityBadge(entity) {
+  if (!entity) return '';
+  return `<span class="badge-entity ${entity}">${entity}</span>`;
+}
+
+function renderRisks() {
+  const atRisk = getTabProjects().filter(p => p.rag === 'Red' || p.rag === 'Amber');
+  const icon = { Red: '🔴', Amber: '🟡' };
+
+  const makeCard = (p) => `
+    <div class="risk-card ${p.rag}">
+      <div class="risk-icon ${p.rag}">${icon[p.rag] || '⚪'}</div>
+      <div class="risk-content">
+        <div class="risk-name" title="${p.name}">${p.name}</div>
+        <div class="risk-meta">
+          ${makeEntityBadge(p.entity)}
+          ${makePhaseBadge(p.phase)}
+          ${makeStatusBadge(p.status)}
+          ${p.pm ? `<span style="font-size:11px;color:var(--text-muted)">PM: ${p.pm}</span>` : ''}
+        </div>
+        <div class="risk-update">${p.update || '<em style="opacity:.4">No recent update</em>'}</div>
+      </div>
+    </div>
+  `;
+
+  const html = atRisk.length
+    ? atRisk.map(makeCard).join('')
+    : '<div style="color:var(--text-muted);font-size:13px;padding:16px 0">No red or amber projects — portfolio is on track.</div>';
+
+  document.getElementById('risks-grid').innerHTML = html;
+
+  const full = document.getElementById('risks-grid-full');
+  if (full) full.innerHTML = atRisk.length
+    ? atRisk.map(makeCard).join('')
+    : '<div style="color:var(--text-muted);font-size:13px;padding:16px 0">No red or amber projects.</div>';
+}
+
+function renderCards() {
+  const search = (document.getElementById('search-input')?.value || '').toLowerCase();
+  let filtered = getTabProjects();
+
+  if (currentFilter === 'Red') filtered = filtered.filter(p => p.rag === 'Red');
+  else if (currentFilter === 'Amber') filtered = filtered.filter(p => p.rag === 'Amber');
+  else if (currentFilter === 'Green') filtered = filtered.filter(p => p.rag === 'Green');
+  else if (currentFilter === 'Open') filtered = filtered.filter(p => p.status === 'Open');
+  else if (currentFilter === 'Paused') filtered = filtered.filter(p => p.status === 'Paused');
+
+  if (currentYearFilter !== 'All') filtered = filtered.filter(p => p.year === currentYearFilter);
+  if (currentEntityFilter !== 'All') filtered = filtered.filter(p => p.entity === currentEntityFilter);
+
+  if (search) {
+    filtered = filtered.filter(p =>
+      p.name.toLowerCase().includes(search) ||
+      (p.pm || '').toLowerCase().includes(search) ||
+      (p.phase || '').toLowerCase().includes(search) ||
+      (p.entity || '').toLowerCase().includes(search)
+    );
+  }
+
+  const grid = document.getElementById('projects-grid');
+
+  if (!filtered.length) {
+    grid.innerHTML = `<div class="empty-state"><div class="empty-icon">📂</div><div class="empty-text">No projects match the current filter.</div></div>`;
+    return;
+  }
+
+  grid.innerHTML = filtered.map((p, i) => {
+    const hasUpdate = p.update && p.update.trim();
+    const longUpdate = hasUpdate && p.update.length > 100;
+    return `
+      <div class="proj-card rag-${p.rag || 'unknown'}" style="animation-delay:${i * 0.02}s">
+        <div class="proj-card-top">
+          <div class="proj-name">${p.name}</div>
+          <div title="${p.rag || 'Unknown'} RAG">${makeRagBadge(p.rag)}</div>
+        </div>
+        <div class="proj-meta">
+          ${makeEntityBadge(p.entity)}
+          ${makePhaseBadge(p.phase)}
+          ${makeStatusBadge(p.status)}
+          <span class="badge-year y${p.year}">${p.year}</span>
+          ${makeBudgetBadge(p.budget)}
+        </div>
+        <div class="divider"></div>
+        ${p.pm ? `<div class="proj-row"><span class="proj-row-label">PM</span><span class="proj-row-val">${p.pm}</span></div>` : ''}
+        ${p.eta ? `<div class="proj-row"><span class="proj-row-label">ETA</span><span class="proj-row-val eta">${p.eta}</span></div>` : ''}
+        <div class="divider"></div>
+        <div>
+          ${hasUpdate
+            ? `<div class="proj-update" id="upd-${i}">${p.update}</div>
+               ${longUpdate ? `<button class="expand-btn" onclick="toggleUpdate(${i}, this)">Show more ↓</button>` : ''}`
+            : `<div class="no-update">No recent update</div>`}
+        </div>
+      </div>
+    `;
+  }).join('');
+}
+
+function toggleUpdate(i, btn) {
+  const el = document.getElementById(`upd-${i}`);
+  if (el.classList.contains('expanded')) {
+    el.classList.remove('expanded');
+    btn.textContent = 'Show more ↓';
+  } else {
+    el.classList.add('expanded');
+    btn.textContent = 'Show less ↑';
+  }
+}
+
+function setFilter(filter, btn) {
+  currentFilter = filter;
+  document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+  renderCards();
+}
+
+function setRagFilter(rag) {
+  currentFilter = rag === 'All' ? 'All' : rag;
+  document.querySelectorAll('.filter-btn').forEach(b => {
+    b.classList.remove('active');
+    if (b.dataset.filter === currentFilter) b.classList.add('active');
+  });
+  renderCards();
+}
+
+function renderPMView() {
+  const pmMap = {};
+  getTabProjects().forEach(p => {
+    const pm = p.pm || 'Unassigned';
+    const names = pm.split(/[\/,]/).map(s => s.trim()).filter(Boolean);
+    names.forEach(name => {
+      if (!pmMap[name]) pmMap[name] = [];
+      pmMap[name].push(p);
+    });
+  });
+
+  const sorted = Object.entries(pmMap).sort((a, b) => b[1].length - a[1].length).slice(0, 12);
+  const max = sorted[0][1].length;
+
+  document.getElementById('pm-bars').innerHTML = sorted.map(([pm, projs]) => `
+    <div class="pm-bar-row">
+      <div class="pm-name">${pm}</div>
+      <div class="pm-bar-track">
+        <div class="pm-bar-fill" style="width:${(projs.length / max * 100).toFixed(1)}%"></div>
+      </div>
+      <div class="pm-count">${projs.length}</div>
+    </div>
+  `).join('');
+}
+
+function setYearFilter(year) {
+  currentYearFilter = year;
+  renderCards();
+}
+
+function setEntityFilter(entity) {
+  currentEntityFilter = entity;
+  ['erp','zg','ztf','zdf'].forEach(e => {
+    const el = document.getElementById('sb-ent-' + e);
+    if (el) el.classList.toggle('active', entity.toLowerCase() === e);
+  });
+  const allBtn = document.getElementById('sb-ent-all');
+  if (allBtn) allBtn.classList.toggle('active', entity === 'All');
+  renderCards();
+}
+
+function setEntityFromBar(entity, btn) {
+  const isActive = btn.classList.contains('active');
+  document.querySelectorAll('.entity-filter').forEach(b => b.classList.remove('active'));
+  if (isActive) {
+    currentEntityFilter = 'All';
+  } else {
+    currentEntityFilter = entity;
+    btn.classList.add('active');
+  }
+  renderCards();
+}
+
+function setYearFromBar(year, btn) {
+  const isActive = btn.classList.contains('active');
+  document.querySelectorAll('.year-filter').forEach(b => b.classList.remove('active'));
+  if (isActive) {
+    currentYearFilter = 'All';
+  } else {
+    currentYearFilter = year;
+    btn.classList.add('active');
+  }
+  renderCards();
+}
+
+function setYearTab(tab) {
+  currentYearTab = tab;
+  currentYearEntityFilter = 'All';
+  document.querySelectorAll('#year-tab-bar .filter-btn').forEach(b => {
+    b.classList.toggle('active', b.dataset.ytab === tab);
+  });
+  const entityBar = document.getElementById('year-entity-bar');
+  entityBar.style.display = (tab !== 'all') ? 'flex' : 'none';
+  document.querySelectorAll('#year-entity-bar .filter-btn').forEach(b => {
+    b.classList.toggle('active', b.dataset.yent === 'All');
+  });
+  renderYearView();
+}
+
+function setYearEntityFilter(entity, btn) {
+  currentYearEntityFilter = entity;
+  document.querySelectorAll('#year-entity-bar .filter-btn').forEach(b => {
+    b.classList.toggle('active', b.dataset.yent === entity);
+  });
+  renderYearView();
+}
+
+function renderYearView() {
+  const years = currentTab === 'archive' ? ['2024', '2025'] : ['2026'];
+  const colors = { '2024': '#7ab8fb', '2025': '#a78bfa', '2026': '#34d399' };
+  const entities = ['ERP','ZG','ZTF','ZDF'];
+  const entColors = { ERP:'#60c8f5', ZG:'#c084fc', ZTF:'#fb923c', ZDF:'#4ade80' };
+  const phaseOrder = ['EX','SD (Solution Design)','PD (Problem Definition)','Closure','PL (Post Launch)','Watchlist'];
+  const phaseLabel = { 'EX':'Execution', 'SD (Solution Design)':'SD', 'PD (Problem Definition)':'PD', 'Closure':'Closure', 'PL (Post Launch)':'Post Launch', 'Watchlist':'Watchlist' };
+
+  function miniTable(label, headerColor, rows) {
+    return `
+      <div style="margin-top:10px">
+        <div style="font-size:9px;font-weight:700;letter-spacing:0.1em;text-transform:uppercase;color:${headerColor};margin-bottom:4px">${label}</div>
+        ${rows}
+      </div>`;
+  }
+
+  function tableRow(label, count, color, total) {
+    const pct = total ? Math.round(count/total*100) : 0;
+    return `
+      <div style="display:flex;align-items:center;gap:6px;padding:3px 0;border-top:1px solid rgba(255,255,255,0.05)">
+        <span style="font-size:10px;color:var(--text-muted);width:78px;flex-shrink:0;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">${label}</span>
+        <div style="flex:1;height:4px;background:rgba(255,255,255,0.07);border-radius:2px;overflow:hidden">
+          <div style="height:100%;width:${pct}%;background:${color};border-radius:2px"></div>
+        </div>
+        <span style="font-family:var(--mono);font-size:10px;color:${color};min-width:18px;text-align:right;font-weight:700">${count}</span>
+      </div>`;
+  }
+
+  // Summary strip
+  const tp = getTabProjects();
+  const strip = document.getElementById('year-summary-strip');
+  strip.innerHTML = years.map(yr => {
+    const yp = tp.filter(p => p.year === yr);
+    const total  = yp.length;
+    const open   = yp.filter(p => p.status === 'Open').length;
+    const closed = yp.filter(p => p.status === 'Closed').length;
+    const paused = yp.filter(p => p.status === 'Paused').length;
+    const notStarted = yp.filter(p => p.status === 'Not Started' || p.status === 'Not Started yet').length;
+    const red    = yp.filter(p => p.rag === 'Red').length;
+    const amber  = yp.filter(p => p.rag === 'Amber').length;
+    const green  = yp.filter(p => p.rag === 'Green').length;
+
+    // Phase breakdown (only phases that exist for this year)
+    const phaseRows = phaseOrder.map(ph => {
+      const c = yp.filter(p => p.phase === ph).length;
+      return c ? tableRow(phaseLabel[ph] || ph, c, '#a78bfa', total) : '';
+    }).join('');
+
+    // Entity breakdown
+    const entRows = entities.map(ent => {
+      const ep = yp.filter(p => p.entity === ent);
+      if (!ep.length) return '';
+      return tableRow(ent, ep.length, entColors[ent], total);
+    }).join('');
+
+    return `
+      <div class="year-kpi y${yr}" onclick="setYearTab('${yr}')" style="min-width:280px;flex:1;cursor:pointer">
+        <div style="display:flex;align-items:baseline;justify-content:space-between;margin-bottom:12px">
+          <div class="year-kpi-title" style="margin-bottom:0">${yr}</div>
+          <span style="font-family:var(--mono);font-size:22px;font-weight:700;color:${colors[yr]}">${total}</span>
+        </div>
+
+        <div style="display:flex;gap:8px;flex-wrap:wrap;margin-bottom:10px">
+          <div style="background:rgba(91,174,255,0.1);border:1px solid rgba(91,174,255,0.2);border-radius:6px;padding:6px 10px;text-align:center;flex:1;min-width:44px">
+            <div style="font-size:16px;font-weight:700;color:var(--accent)">${open}</div>
+            <div style="font-size:9px;color:var(--text-muted);text-transform:uppercase;letter-spacing:0.06em">Open</div>
+          </div>
+          <div style="background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.08);border-radius:6px;padding:6px 10px;text-align:center;flex:1;min-width:44px">
+            <div style="font-size:16px;font-weight:700;color:var(--text-muted)">${closed}</div>
+            <div style="font-size:9px;color:var(--text-muted);text-transform:uppercase;letter-spacing:0.06em">Closed</div>
+          </div>
+          ${paused ? `<div style="background:rgba(255,181,71,0.08);border:1px solid rgba(255,181,71,0.2);border-radius:6px;padding:6px 10px;text-align:center;flex:1;min-width:44px">
+            <div style="font-size:16px;font-weight:700;color:var(--amber)">${paused}</div>
+            <div style="font-size:9px;color:var(--text-muted);text-transform:uppercase;letter-spacing:0.06em">Paused</div>
+          </div>` : ''}
+          ${notStarted ? `<div style="background:rgba(255,255,255,0.03);border:1px solid rgba(255,255,255,0.07);border-radius:6px;padding:6px 10px;text-align:center;flex:1;min-width:44px">
+            <div style="font-size:16px;font-weight:700;color:var(--text-muted)">${notStarted}</div>
+            <div style="font-size:9px;color:var(--text-muted);text-transform:uppercase;letter-spacing:0.06em">Not Started</div>
+          </div>` : ''}
+        </div>
+
+        <div style="display:flex;gap:6px;margin-bottom:2px;flex-wrap:wrap">
+          ${red   ? `<span class="rag-chip Red">🔴 ${red}</span>` : ''}
+          ${amber ? `<span class="rag-chip Amber">🟡 ${amber}</span>` : ''}
+          ${green ? `<span class="rag-chip Green">🟢 ${green}</span>` : ''}
+        </div>
+
+        ${miniTable('Phase Breakdown', '#a78bfa', phaseRows)}
+        ${miniTable('By Entity', colors[yr], entRows)}
+      </div>
+    `;
+  }).join('');
+
+  // Projects grid
+  const grid = document.getElementById('year-projects-grid');
+  let filtered = currentYearTab === 'all' ? tp : tp.filter(p => p.year === currentYearTab);
+
+  // Update entity counts for current year tab
+  if (currentYearTab !== 'all') {
+    ['ERP','ZG','ZTF','ZDF'].forEach(ent => {
+      const el = document.getElementById('yfc-' + ent.toLowerCase());
+      if (el) el.textContent = filtered.filter(p => p.entity === ent).length;
+    });
+  }
+
+  if (currentYearEntityFilter !== 'All') {
+    filtered = filtered.filter(p => p.entity === currentYearEntityFilter);
+  }
+
+  grid.innerHTML = filtered.map((p, i) => {
+    const hasUpdate = p.update && p.update.trim();
+    const longUpdate = hasUpdate && p.update.length > 100;
+    return `
+      <div class="proj-card rag-${p.rag || 'unknown'}" style="animation-delay:${i * 0.015}s">
+        <div class="proj-card-top">
+          <div class="proj-name">${p.name}</div>
+          <div title="${p.rag || 'Unknown'} RAG">${makeRagBadge(p.rag)}</div>
+        </div>
+        <div class="proj-meta">
+          ${makeEntityBadge(p.entity)}
+          ${makePhaseBadge(p.phase)}
+          ${makeStatusBadge(p.status)}
+          <span class="badge-year y${p.year}">${p.year}</span>
+          ${makeBudgetBadge(p.budget)}
+        </div>
+        <div class="divider"></div>
+        ${p.pm ? `<div class="proj-row"><span class="proj-row-label">PM</span><span class="proj-row-val">${p.pm}</span></div>` : ''}
+        ${p.eta ? `<div class="proj-row"><span class="proj-row-label">ETA</span><span class="proj-row-val eta">${p.eta}</span></div>` : ''}
+        <div class="divider"></div>
+        <div>
+          ${hasUpdate
+            ? `<div class="proj-update" id="yupd-${i}">${p.update}</div>
+               ${longUpdate ? `<button class="expand-btn" onclick="toggleYUpdate(${i}, this)">Show more ↓</button>` : ''}`
+            : `<div class="no-update">No recent update</div>`}
+        </div>
+      </div>
+    `;
+  }).join('');
+}
+
+function toggleYUpdate(i, btn) {
+  const el = document.getElementById(`yupd-${i}`);
+  if (el.classList.contains('expanded')) {
+    el.classList.remove('expanded');
+    btn.textContent = 'Show more ↓';
+  } else {
+    el.classList.add('expanded');
+    btn.textContent = 'Show less ↑';
+  }
+}
+
+function showView(view) {
+  currentView = view;
+  // Keep tab buttons active, only toggle view nav buttons
+  ['dashboard','risks','pm','year'].forEach(v => {
+    const el = document.getElementById('nav-' + v);
+    if (el) el.classList.toggle('active', v === view);
+  });
+
+  document.getElementById('view-dashboard').style.display = view === 'dashboard' ? '' : 'none';
+  document.getElementById('view-risks').style.display = view === 'risks' ? '' : 'none';
+  document.getElementById('view-pm').style.display = view === 'pm' ? '' : 'none';
+  document.getElementById('view-year').style.display = view === 'year' ? '' : 'none';
+
+  // Update header subtitle
+  const subtitles = { dashboard: 'Dashboard', risks: 'Risks & Attention', pm: 'By Project Manager', year: 'By Year' };
+  const tabLabel = currentTab === 'active' ? '2026 Active Programs' : 'Archive · 2024 & 2025';
+  document.querySelector('.header-sub').textContent = tabLabel + ' · ' + subtitles[view];
+
+  if (view === 'pm') renderPMView();
+  if (view === 'year') renderYearView();
+}
+
+// Init
+initKPIs();
+renderRisks();
+renderCards();
+</script>
+</body>
+</html>
