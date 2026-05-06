@@ -1018,9 +1018,9 @@
     <div class="header-right">
       <div class="live-badge">
         <div class="live-dot" id="live-dot"></div>
-        <span id="live-status">Data as of May 07, 2026 00:42</span>
+        <span id="live-status">Data as of May 07, 2026 00:49</span>
       </div>
-      <div class="date-badge" id="last-updated">May 07, 2026 00:42</div>
+      <div class="date-badge" id="last-updated">May 07, 2026 00:49</div>
     </div>
   </header>
 
@@ -1502,8 +1502,8 @@ function renderRisks() {
   const icon = { Red: '🔴', Amber: '🟡' };
 
   const makeCard = (p) => `
-    <div class="risk-card ${p.rag}">
-      <div class="risk-icon ${p.rag}">${icon[p.rag] || '⚪'}</div>
+    <div class="risk-card ${(p.rag||'').toLowerCase()}">
+      <div class="risk-icon ${(p.rag||'').toLowerCase()}">${icon[p.rag] || '⚪'}</div>
       <div class="risk-content">
         <div class="risk-name" title="${p.name}">${p.name}</div>
         <div class="risk-meta">
@@ -1883,4 +1883,3 @@ renderCards();
 </script>
 </body>
 </html>
-<!-- ZTF PMO Hub v1778107648 -->
