@@ -794,6 +794,7 @@
   .badge-entity.ZG   { color: #c084fc; border-color: rgba(192,132,252,0.3); background: rgba(192,132,252,0.1); }
   .badge-entity.ZTF  { color: #fb923c; border-color: rgba(251,146,60,0.3);  background: rgba(251,146,60,0.1); }
   .badge-entity.ZDF  { color: #4ade80; border-color: rgba(74,222,128,0.3);  background: rgba(74,222,128,0.1); }
+  .badge-entity.CRM  { color: #f472b6; border-color: rgba(244,114,182,0.3); background: rgba(244,114,182,0.1); }
 
   .year-kpi {
     flex: 1; min-width: 180px;
@@ -997,6 +998,10 @@
         <span style="font-family:var(--mono);font-size:10px;color:#4ade80;flex-shrink:0">ZDF</span>
         ZDF
       </button>
+      <button class="nav-item" id="sb-ent-crm" onclick="setEntityFilter('CRM')">
+        <span style="font-family:var(--mono);font-size:10px;color:#f472b6;flex-shrink:0">CRM</span>
+        CRM
+      </button>
     </nav>
   </div>
 
@@ -1018,9 +1023,9 @@
     <div class="header-right">
       <div class="live-badge">
         <div class="live-dot" id="live-dot"></div>
-        <span id="live-status">Data as of May 07, 2026 15:43</span>
+        <span id="live-status">Data as of May 07, 2026 15:57</span>
       </div>
-      <div class="date-badge" id="last-updated">May 07, 2026 15:43</div>
+      <div class="date-badge" id="last-updated">May 07, 2026 15:57</div>
     </div>
   </header>
 
@@ -1131,6 +1136,9 @@
         <button class="filter-btn entity-filter" data-entityfilter="ZDF" onclick="setEntityFromBar('ZDF',this)" style="color:#4ade80">
           ZDF <span class="filter-count" id="fc-zdf">0</span>
         </button>
+        <button class="filter-btn entity-filter" data-entityfilter="CRM" onclick="setEntityFromBar('CRM',this)" style="color:#f472b6">
+          CRM <span class="filter-count" id="fc-crm">0</span>
+        </button>
         <div class="search-wrap">
           <span class="search-icon">🔍</span>
           <input class="search-input" type="text" placeholder="Search projects…" id="search-input" oninput="renderCards()">
@@ -1175,6 +1183,7 @@
         <button class="filter-btn" data-yent="ZG" onclick="setYearEntityFilter('ZG',this)" style="color:#c084fc">ZG <span class="filter-count" id="yfc-zg">0</span></button>
         <button class="filter-btn" data-yent="ZTF" onclick="setYearEntityFilter('ZTF',this)" style="color:#fb923c">ZTF <span class="filter-count" id="yfc-ztf">0</span></button>
         <button class="filter-btn" data-yent="ZDF" onclick="setYearEntityFilter('ZDF',this)" style="color:#4ade80">ZDF <span class="filter-count" id="yfc-zdf">0</span></button>
+        <button class="filter-btn" data-yent="CRM" onclick="setYearEntityFilter('CRM',this)" style="color:#f472b6">CRM <span class="filter-count" id="yfc-crm">0</span></button>
       </div>
       <div class="projects-grid" id="year-projects-grid"></div>
     </div>
@@ -1450,6 +1459,7 @@ function initKPIs() {
   document.getElementById('fc-zg').textContent = tp.filter(p => p.entity === 'ZG').length;
   document.getElementById('fc-ztf').textContent = tp.filter(p => p.entity === 'ZTF').length;
   document.getElementById('fc-zdf').textContent = tp.filter(p => p.entity === 'ZDF').length;
+  document.getElementById('fc-crm').textContent = tp.filter(p => p.entity === 'CRM').length;
 }
 
 function animateCount(id, target) {
@@ -1648,7 +1658,7 @@ function setYearFilter(year) {
 
 function setEntityFilter(entity) {
   currentEntityFilter = entity;
-  ['erp','zg','ztf','zdf'].forEach(e => {
+  ['erp','zg','ztf','zdf','crm'].forEach(e => {
     const el = document.getElementById('sb-ent-' + e);
     if (el) el.classList.toggle('active', entity.toLowerCase() === e);
   });
@@ -1706,8 +1716,8 @@ function setYearEntityFilter(entity, btn) {
 function renderYearView() {
   const years = currentTab === 'archive' ? ['2024', '2025'] : ['2026'];
   const colors = { '2024': '#7ab8fb', '2025': '#a78bfa', '2026': '#34d399' };
-  const entities = ['ERP','ZG','ZTF','ZDF'];
-  const entColors = { ERP:'#60c8f5', ZG:'#c084fc', ZTF:'#fb923c', ZDF:'#4ade80' };
+  const entities = ['ERP','ZG','ZTF','ZDF','CRM'];
+  const entColors = { ERP:'#60c8f5', ZG:'#c084fc', ZTF:'#fb923c', ZDF:'#4ade80', CRM:'#f472b6' };
   const phaseOrder = ['EX','SD (Solution Design)','PD (Problem Definition)','Closure','PL (Post Launch)','Watchlist'];
   const phaseLabel = { 'EX':'Execution', 'SD (Solution Design)':'SD', 'PD (Problem Definition)':'PD', 'Closure':'Closure', 'PL (Post Launch)':'Post Launch', 'Watchlist':'Watchlist' };
 
@@ -1802,7 +1812,7 @@ function renderYearView() {
 
   // Update entity counts for current year tab
   if (currentYearTab !== 'all') {
-    ['ERP','ZG','ZTF','ZDF'].forEach(ent => {
+    ['ERP','ZG','ZTF','ZDF','CRM'].forEach(ent => {
       const el = document.getElementById('yfc-' + ent.toLowerCase());
       if (el) el.textContent = filtered.filter(p => p.entity === ent).length;
     });
