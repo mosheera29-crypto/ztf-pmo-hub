@@ -332,6 +332,38 @@
     border: 1px solid rgba(91,174,255,0.35);
   }
 
+  .phase-strip {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 7px 10px;
+    border-radius: 6px;
+    background: rgba(91,174,255,0.07);
+    border: 1px solid rgba(91,174,255,0.2);
+    margin-bottom: 8px;
+  }
+  .phase-strip-icon {
+    font-size: 11px;
+    opacity: 0.7;
+  }
+  .phase-strip-label {
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 0.05em;
+    text-transform: uppercase;
+    color: var(--accent);
+  }
+  .phase-strip-sub {
+    font-size: 10px;
+    color: var(--text-muted);
+    margin-left: auto;
+  }
+  .phase-strip.paused {
+    background: rgba(255,181,71,0.07);
+    border-color: rgba(255,181,71,0.2);
+  }
+  .phase-strip.paused .phase-strip-label { color: var(--amber); }
+
   .kpi-sub {
     font-size: 11px;
     color: var(--text-muted);
@@ -1098,7 +1130,7 @@
 
   <div class="sidebar-footer">
     <div>Source: Currently Active Programs</div>
-    <div style="margin-top:4px;font-family:var(--mono);font-size:10px;">May 08, 2026 14:33</div>
+    <div style="margin-top:4px;font-family:var(--mono);font-size:10px;">May 08, 2026 15:37</div>
     <div style="margin-top:6px;font-size:9px;color:var(--text-muted);line-height:1.4">© Mosheera Salah · Internal use only</div>
   </div>
 </aside>
@@ -1115,9 +1147,9 @@
     <div class="header-right">
       <div class="live-badge">
         <div class="live-dot" id="live-dot"></div>
-        <span id="live-status">Data as of May 08, 2026 14:33</span>
+        <span id="live-status">Data as of May 08, 2026 15:37</span>
       </div>
-      <div class="date-badge" id="last-updated">May 08, 2026 14:33</div>
+      <div class="date-badge" id="last-updated">May 08, 2026 15:37</div>
     </div>
   </header>
 
@@ -1315,7 +1347,7 @@
         <div class="footer-dot"></div>
         Source: Currently Active Programs (Google Sheets)
       </div>
-      <div>Generated: May 08, 2026 14:33</div>
+      <div>Generated: May 08, 2026 15:37</div>
     </div>
     <div style="display:flex;flex-direction:column;align-items:flex-end;gap:3px">
       <div>© <strong style="color:var(--text-secondary)">Mosheera Salah</strong> · ZTF PMO Hub</div>
@@ -1635,7 +1667,15 @@ const PHASE_LABELS = {
 function makePhaseLabel(phase, status) {
   if (!phase || (status !== 'Open' && status !== 'Paused')) return '';
   const label = PHASE_LABELS[phase] || phase;
-  return `<span class="badge-phase-label">${label}</span>`;
+  const isPaused = status === 'Paused';
+  const icon = { 'Execution': '▶', 'Solution Design': '✦', 'Problem Definition': '◎', 'Post Launch': '✔', 'Closure': '◻', 'Watchlist': '◈' };
+  return `
+    <div class="phase-strip${isPaused ? ' paused' : ''}">
+      <span class="phase-strip-icon">${icon[label] || '●'}</span>
+      <span class="phase-strip-label">${label}</span>
+      <span class="phase-strip-sub">${isPaused ? 'Paused' : 'Active'}</span>
+    </div>
+  `;
 }
 
 function renderRisks() {
@@ -1712,11 +1752,11 @@ function renderCards() {
           ${makeEntityBadge(p.entity)}
           ${makePhaseBadge(p.phase)}
           ${makeStatusBadge(p.status)}
-          ${makePhaseLabel(p.phase, p.status)}
           <span class="badge-year y${p.year}">${p.year}</span>
           ${makeBudgetBadge(p.budget)}
         </div>
         <div class="divider"></div>
+        ${makePhaseLabel(p.phase, p.status)}
         ${p.pm ? `<div class="proj-row"><span class="proj-row-label">PM</span><span class="proj-row-val">${p.pm}</span></div>` : ''}
         ${p.eta ? `<div class="proj-row"><span class="proj-row-label">ETA</span><span class="proj-row-val eta">${p.eta}</span></div>` : ''}
         <div class="divider"></div>
@@ -2013,11 +2053,11 @@ function renderYearView() {
           ${makeEntityBadge(p.entity)}
           ${makePhaseBadge(p.phase)}
           ${makeStatusBadge(p.status)}
-          ${makePhaseLabel(p.phase, p.status)}
           <span class="badge-year y${p.year}">${p.year}</span>
           ${makeBudgetBadge(p.budget)}
         </div>
         <div class="divider"></div>
+        ${makePhaseLabel(p.phase, p.status)}
         ${p.pm ? `<div class="proj-row"><span class="proj-row-label">PM</span><span class="proj-row-val">${p.pm}</span></div>` : ''}
         ${p.eta ? `<div class="proj-row"><span class="proj-row-label">ETA</span><span class="proj-row-val eta">${p.eta}</span></div>` : ''}
         <div class="divider"></div>
