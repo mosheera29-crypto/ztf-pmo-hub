@@ -257,7 +257,7 @@
   /* ── KPI STRIP ── */
   .kpi-strip {
     display: grid;
-    grid-template-columns: repeat(6, 1fr);
+    grid-template-columns: repeat(8, 1fr);
     gap: 12px;
     margin-bottom: 28px;
     animation: fadeUp 0.5s ease both;
@@ -299,6 +299,70 @@
   .kpi-value.amber { color: var(--amber); }
   .kpi-value.green { color: var(--green); }
   .kpi-value.risk { color: #f9a84f; }
+  .kpi-value.closed { color: var(--text-secondary); }
+
+  .kpi-entity-breakdown {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 4px;
+    margin-top: 6px;
+  }
+  .kpi-entity-chip {
+    font-size: 10px;
+    font-family: var(--mono);
+    font-weight: 600;
+    padding: 2px 6px;
+    border-radius: 4px;
+    border: 1px solid;
+  }
+  .kpi-entity-chip.ERP { color: #60c8f5; border-color: rgba(96,200,245,0.3); background: rgba(96,200,245,0.08); }
+  .kpi-entity-chip.ZG  { color: #c084fc; border-color: rgba(192,132,252,0.3); background: rgba(192,132,252,0.08); }
+  .kpi-entity-chip.ZTF { color: #fb923c; border-color: rgba(251,146,60,0.3);  background: rgba(251,146,60,0.08); }
+  .kpi-entity-chip.ZDF { color: #4ade80; border-color: rgba(74,222,128,0.3);  background: rgba(74,222,128,0.08); }
+
+  .badge-phase-label {
+    font-size: 10px;
+    font-weight: 700;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    padding: 3px 8px;
+    border-radius: 4px;
+    background: rgba(91,174,255,0.12);
+    color: var(--accent);
+    border: 1px solid rgba(91,174,255,0.35);
+  }
+
+  .phase-strip {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 7px 10px;
+    border-radius: 6px;
+    background: rgba(91,174,255,0.07);
+    border: 1px solid rgba(91,174,255,0.2);
+    margin-bottom: 8px;
+  }
+  .phase-strip-icon {
+    font-size: 11px;
+    opacity: 0.7;
+  }
+  .phase-strip-label {
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 0.05em;
+    text-transform: uppercase;
+    color: var(--accent);
+  }
+  .phase-strip-sub {
+    font-size: 10px;
+    color: var(--text-muted);
+    margin-left: auto;
+  }
+  .phase-strip.paused {
+    background: rgba(255,181,71,0.07);
+    border-color: rgba(255,181,71,0.2);
+  }
+  .phase-strip.paused .phase-strip-label { color: var(--amber); }
 
   .kpi-sub {
     font-size: 11px;
@@ -734,6 +798,65 @@
     grid-template-columns: 130px 1fr 40px;
     align-items: center;
     gap: 10px;
+    cursor: pointer;
+    border-radius: 6px;
+    padding: 4px 6px;
+    margin: 0 -6px;
+    transition: background 0.15s;
+  }
+  .pm-bar-row:hover { background: var(--accent-dim); }
+  .pm-bar-row.expanded { background: var(--accent-dim); }
+
+  .pm-detail {
+    display: none;
+    margin: 0 0 12px 0;
+    border-left: 2px solid var(--accent);
+    padding: 12px 16px;
+    background: rgba(91,174,255,0.05);
+    border-radius: 0 8px 8px 0;
+    animation: fadeUp 0.2s ease both;
+  }
+  .pm-detail.open { display: block; }
+
+  .pm-detail-summary {
+    font-size: 12px;
+    color: var(--text-secondary);
+    margin-bottom: 10px;
+    display: flex;
+    gap: 12px;
+    flex-wrap: wrap;
+    align-items: center;
+  }
+  .pm-detail-summary strong { color: var(--text-primary); font-weight: 600; }
+  .pm-rag-chip {
+    font-size: 11px;
+    font-weight: 600;
+    padding: 2px 8px;
+    border-radius: 4px;
+  }
+  .pm-rag-chip.Green { background: var(--green-bg); color: var(--green); }
+  .pm-rag-chip.Amber { background: var(--amber-bg); color: var(--amber); }
+  .pm-rag-chip.Red   { background: var(--red-bg);   color: var(--red); }
+
+  .pm-detail-list { display: flex; flex-direction: column; gap: 6px; }
+  .pm-detail-row {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 12px;
+    color: var(--text-secondary);
+    padding: 6px 8px;
+    border-radius: 6px;
+    background: var(--card-bg);
+    border: 1px solid var(--card-border);
+    flex-wrap: wrap;
+  }
+  .pm-detail-name {
+    flex: 1;
+    min-width: 160px;
+    color: var(--text-primary);
+    font-size: 12px;
+    font-weight: 500;
   }
 
   .pm-name {
@@ -794,6 +917,7 @@
   .badge-entity.ZG   { color: #c084fc; border-color: rgba(192,132,252,0.3); background: rgba(192,132,252,0.1); }
   .badge-entity.ZTF  { color: #fb923c; border-color: rgba(251,146,60,0.3);  background: rgba(251,146,60,0.1); }
   .badge-entity.ZDF  { color: #4ade80; border-color: rgba(74,222,128,0.3);  background: rgba(74,222,128,0.1); }
+  .badge-entity.CRM  { color: #f472b6; border-color: rgba(244,114,182,0.3); background: rgba(244,114,182,0.1); }
 
   .year-kpi {
     flex: 1; min-width: 180px;
@@ -874,7 +998,7 @@
 
   /* ── RESPONSIVE ── */
   @media (max-width: 1200px) {
-    .kpi-strip { grid-template-columns: repeat(3, 1fr); }
+    .kpi-strip { grid-template-columns: repeat(4, 1fr); }
   }
 
   @media (max-width: 900px) {
@@ -997,12 +1121,17 @@
         <span style="font-family:var(--mono);font-size:10px;color:#4ade80;flex-shrink:0">ZDF</span>
         ZDF
       </button>
+      <button class="nav-item" id="sb-ent-crm" onclick="setEntityFilter('CRM')">
+        <span style="font-family:var(--mono);font-size:10px;color:#f472b6;flex-shrink:0">CRM</span>
+        CRM
+      </button>
     </nav>
   </div>
 
   <div class="sidebar-footer">
     <div>Source: Currently Active Programs</div>
-    <div style="margin-top:4px;font-family:var(--mono);font-size:10px;">Generated May 6, 2026</div>
+    <div style="margin-top:4px;font-family:var(--mono);font-size:10px;">__UPDATED__</div>
+    <div style="margin-top:6px;font-size:9px;color:var(--text-muted);line-height:1.4">© Mosheera Salah · Internal use only</div>
   </div>
 </aside>
 
@@ -1057,6 +1186,16 @@
         <div class="kpi-label">Budget Risk</div>
         <div class="kpi-value risk" id="kpi-budget">—</div>
         <div class="kpi-sub">exceeded budget</div>
+      </div>
+      <div class="kpi-card">
+        <div class="kpi-label">Closed</div>
+        <div class="kpi-value closed" id="kpi-closed">—</div>
+        <div class="kpi-sub">completed projects</div>
+      </div>
+      <div class="kpi-card">
+        <div class="kpi-label">Closed by Entity</div>
+        <div class="kpi-value closed" id="kpi-closed-total" style="font-size:20px;margin-bottom:4px">—</div>
+        <div class="kpi-entity-breakdown" id="kpi-closed-entities"></div>
       </div>
     </div>
 
@@ -1131,6 +1270,9 @@
         <button class="filter-btn entity-filter" data-entityfilter="ZDF" onclick="setEntityFromBar('ZDF',this)" style="color:#4ade80">
           ZDF <span class="filter-count" id="fc-zdf">0</span>
         </button>
+        <button class="filter-btn entity-filter" data-entityfilter="CRM" onclick="setEntityFromBar('CRM',this)" style="color:#f472b6">
+          CRM <span class="filter-count" id="fc-crm">0</span>
+        </button>
         <div class="search-wrap">
           <span class="search-icon">🔍</span>
           <input class="search-input" type="text" placeholder="Search projects…" id="search-input" oninput="renderCards()">
@@ -1175,6 +1317,7 @@
         <button class="filter-btn" data-yent="ZG" onclick="setYearEntityFilter('ZG',this)" style="color:#c084fc">ZG <span class="filter-count" id="yfc-zg">0</span></button>
         <button class="filter-btn" data-yent="ZTF" onclick="setYearEntityFilter('ZTF',this)" style="color:#fb923c">ZTF <span class="filter-count" id="yfc-ztf">0</span></button>
         <button class="filter-btn" data-yent="ZDF" onclick="setYearEntityFilter('ZDF',this)" style="color:#4ade80">ZDF <span class="filter-count" id="yfc-zdf">0</span></button>
+        <button class="filter-btn" data-yent="CRM" onclick="setYearEntityFilter('CRM',this)" style="color:#f472b6">CRM <span class="filter-count" id="yfc-crm">0</span></button>
       </div>
       <div class="projects-grid" id="year-projects-grid"></div>
     </div>
@@ -1204,9 +1347,12 @@
         <div class="footer-dot"></div>
         Source: Currently Active Programs (Google Sheets)
       </div>
-      <div>Generated: May 6, 2026</div>
+      <div>Generated: __UPDATED__</div>
     </div>
-    <div>© ZTF PMO Hub</div>
+    <div style="display:flex;flex-direction:column;align-items:flex-end;gap:3px">
+      <div>© <strong style="color:var(--text-secondary)">Mosheera Salah</strong> · ZTF PMO Hub</div>
+      <div style="font-size:10px;color:var(--text-muted)">Internal use only · Confidential · Zalando SE data · All rights reserved</div>
+    </div>
   </footer>
 
 </main>
@@ -1430,12 +1576,23 @@ function initKPIs() {
   const green = tp.filter(p => p.rag === 'Green').length;
   const budget = tp.filter(p => p.budget && p.budget.toLowerCase().includes('exceed')).length;
 
+  const closed = tp.filter(p => p.status === 'Closed').length;
+  const closedByEntity = ['ERP','ZG','ZTF','ZDF'].map(e => ({
+    entity: e,
+    count: tp.filter(p => p.status === 'Closed' && p.entity === e).length
+  })).filter(e => e.count > 0);
+
   animateCount('kpi-total', total);
   animateCount('kpi-open', open);
   animateCount('kpi-red', red);
   animateCount('kpi-amber', amber);
   animateCount('kpi-green', green);
   animateCount('kpi-budget', budget);
+  animateCount('kpi-closed', closed);
+  animateCount('kpi-closed-total', closed);
+  document.getElementById('kpi-closed-entities').innerHTML = closedByEntity
+    .map(e => `<span class="kpi-entity-chip ${e.entity}">${e.entity} ${e.count}</span>`)
+    .join('');
 
   document.getElementById('fc-all').textContent = total;
   document.getElementById('fc-red').textContent = red;
@@ -1450,6 +1607,7 @@ function initKPIs() {
   document.getElementById('fc-zg').textContent = tp.filter(p => p.entity === 'ZG').length;
   document.getElementById('fc-ztf').textContent = tp.filter(p => p.entity === 'ZTF').length;
   document.getElementById('fc-zdf').textContent = tp.filter(p => p.entity === 'ZDF').length;
+  document.getElementById('fc-crm').textContent = tp.filter(p => p.entity === 'CRM').length;
 }
 
 function animateCount(id, target) {
@@ -1497,13 +1655,36 @@ function makeEntityBadge(entity) {
   return `<span class="badge-entity ${entity}">${entity}</span>`;
 }
 
+const PHASE_LABELS = {
+  'EX': 'Execution',
+  'SD (Solution Design)': 'Solution Design',
+  'PD (Problem Definition)': 'Problem Definition',
+  'PL (Post Launch)': 'Post Launch',
+  'Closure': 'Closure',
+  'Watchlist': 'Watchlist',
+};
+
+function makePhaseLabel(phase, status) {
+  if (!phase || (status !== 'Open' && status !== 'Paused')) return '';
+  const label = PHASE_LABELS[phase] || phase;
+  const isPaused = status === 'Paused';
+  const icon = { 'Execution': '▶', 'Solution Design': '✦', 'Problem Definition': '◎', 'Post Launch': '✔', 'Closure': '◻', 'Watchlist': '◈' };
+  return `
+    <div class="phase-strip${isPaused ? ' paused' : ''}">
+      <span class="phase-strip-icon">${icon[label] || '●'}</span>
+      <span class="phase-strip-label">${label}</span>
+      <span class="phase-strip-sub">${isPaused ? 'Paused' : 'Active'}</span>
+    </div>
+  `;
+}
+
 function renderRisks() {
   const atRisk = getTabProjects().filter(p => p.rag === 'Red' || p.rag === 'Amber');
   const icon = { Red: '🔴', Amber: '🟡' };
 
   const makeCard = (p) => `
-    <div class="risk-card ${p.rag}">
-      <div class="risk-icon ${p.rag}">${icon[p.rag] || '⚪'}</div>
+    <div class="risk-card ${(p.rag||'').toLowerCase()}">
+      <div class="risk-icon ${(p.rag||'').toLowerCase()}">${icon[p.rag] || '⚪'}</div>
       <div class="risk-content">
         <div class="risk-name" title="${p.name}">${p.name}</div>
         <div class="risk-meta">
@@ -1575,6 +1756,7 @@ function renderCards() {
           ${makeBudgetBadge(p.budget)}
         </div>
         <div class="divider"></div>
+        ${makePhaseLabel(p.phase, p.status)}
         ${p.pm ? `<div class="proj-row"><span class="proj-row-label">PM</span><span class="proj-row-val">${p.pm}</span></div>` : ''}
         ${p.eta ? `<div class="proj-row"><span class="proj-row-label">ETA</span><span class="proj-row-val eta">${p.eta}</span></div>` : ''}
         <div class="divider"></div>
@@ -1616,6 +1798,8 @@ function setRagFilter(rag) {
   renderCards();
 }
 
+let activePMRow = null;
+
 function renderPMView() {
   const pmMap = {};
   getTabProjects().forEach(p => {
@@ -1630,15 +1814,59 @@ function renderPMView() {
   const sorted = Object.entries(pmMap).sort((a, b) => b[1].length - a[1].length).slice(0, 12);
   const max = sorted[0][1].length;
 
-  document.getElementById('pm-bars').innerHTML = sorted.map(([pm, projs]) => `
-    <div class="pm-bar-row">
-      <div class="pm-name">${pm}</div>
-      <div class="pm-bar-track">
-        <div class="pm-bar-fill" style="width:${(projs.length / max * 100).toFixed(1)}%"></div>
+  document.getElementById('pm-bars').innerHTML = sorted.map(([pm, projs]) => {
+    const safeid = pm.replace(/\s+/g, '_').replace(/[^a-zA-Z0-9_]/g, '');
+    const green = projs.filter(p => p.rag === 'Green').length;
+    const amber = projs.filter(p => p.rag === 'Amber').length;
+    const red   = projs.filter(p => p.rag === 'Red').length;
+    const ragSummary = [
+      red   ? `<span class="pm-rag-chip Red">${red} Red</span>` : '',
+      amber ? `<span class="pm-rag-chip Amber">${amber} Amber</span>` : '',
+      green ? `<span class="pm-rag-chip Green">${green} Green</span>` : ''
+    ].filter(Boolean).join('');
+
+    const detailRows = projs.map(p => `
+      <div class="pm-detail-row">
+        <span class="pm-detail-name">${p.name}</span>
+        ${makeEntityBadge(p.entity)}
+        ${makePhaseBadge(p.phase)}
+        ${makeRagBadge(p.rag)}
+        ${makeStatusBadge(p.status)}
       </div>
-      <div class="pm-count">${projs.length}</div>
-    </div>
-  `).join('');
+    `).join('');
+
+    return `
+      <div class="pm-bar-row" onclick="togglePMDetail('${safeid}', this)" id="pmrow-${safeid}">
+        <div class="pm-name">${pm}</div>
+        <div class="pm-bar-track">
+          <div class="pm-bar-fill" style="width:${(projs.length / max * 100).toFixed(1)}%"></div>
+        </div>
+        <div class="pm-count">${projs.length}</div>
+      </div>
+      <div class="pm-detail" id="pmdetail-${safeid}">
+        <div class="pm-detail-summary">
+          <strong>${projs.length} project${projs.length !== 1 ? 's' : ''}</strong>
+          ${ragSummary}
+        </div>
+        <div class="pm-detail-list">${detailRows}</div>
+      </div>
+    `;
+  }).join('');
+  activePMRow = null;
+}
+
+function togglePMDetail(safeid, rowEl) {
+  const detail = document.getElementById('pmdetail-' + safeid);
+  const isOpen = detail.classList.contains('open');
+  document.querySelectorAll('.pm-detail.open').forEach(d => d.classList.remove('open'));
+  document.querySelectorAll('.pm-bar-row.expanded').forEach(r => r.classList.remove('expanded'));
+  if (!isOpen) {
+    detail.classList.add('open');
+    rowEl.classList.add('expanded');
+    activePMRow = safeid;
+  } else {
+    activePMRow = null;
+  }
 }
 
 function setYearFilter(year) {
@@ -1648,7 +1876,7 @@ function setYearFilter(year) {
 
 function setEntityFilter(entity) {
   currentEntityFilter = entity;
-  ['erp','zg','ztf','zdf'].forEach(e => {
+  ['erp','zg','ztf','zdf','crm'].forEach(e => {
     const el = document.getElementById('sb-ent-' + e);
     if (el) el.classList.toggle('active', entity.toLowerCase() === e);
   });
@@ -1706,8 +1934,8 @@ function setYearEntityFilter(entity, btn) {
 function renderYearView() {
   const years = currentTab === 'archive' ? ['2024', '2025'] : ['2026'];
   const colors = { '2024': '#7ab8fb', '2025': '#a78bfa', '2026': '#34d399' };
-  const entities = ['ERP','ZG','ZTF','ZDF'];
-  const entColors = { ERP:'#60c8f5', ZG:'#c084fc', ZTF:'#fb923c', ZDF:'#4ade80' };
+  const entities = ['ERP','ZG','ZTF','ZDF','CRM'];
+  const entColors = { ERP:'#60c8f5', ZG:'#c084fc', ZTF:'#fb923c', ZDF:'#4ade80', CRM:'#f472b6' };
   const phaseOrder = ['EX','SD (Solution Design)','PD (Problem Definition)','Closure','PL (Post Launch)','Watchlist'];
   const phaseLabel = { 'EX':'Execution', 'SD (Solution Design)':'SD', 'PD (Problem Definition)':'PD', 'Closure':'Closure', 'PL (Post Launch)':'Post Launch', 'Watchlist':'Watchlist' };
 
@@ -1802,7 +2030,7 @@ function renderYearView() {
 
   // Update entity counts for current year tab
   if (currentYearTab !== 'all') {
-    ['ERP','ZG','ZTF','ZDF'].forEach(ent => {
+    ['ERP','ZG','ZTF','ZDF','CRM'].forEach(ent => {
       const el = document.getElementById('yfc-' + ent.toLowerCase());
       if (el) el.textContent = filtered.filter(p => p.entity === ent).length;
     });
@@ -1829,6 +2057,7 @@ function renderYearView() {
           ${makeBudgetBadge(p.budget)}
         </div>
         <div class="divider"></div>
+        ${makePhaseLabel(p.phase, p.status)}
         ${p.pm ? `<div class="proj-row"><span class="proj-row-label">PM</span><span class="proj-row-val">${p.pm}</span></div>` : ''}
         ${p.eta ? `<div class="proj-row"><span class="proj-row-label">ETA</span><span class="proj-row-val eta">${p.eta}</span></div>` : ''}
         <div class="divider"></div>
