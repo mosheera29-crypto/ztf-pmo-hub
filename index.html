@@ -257,7 +257,7 @@
   /* ── KPI STRIP ── */
   .kpi-strip {
     display: grid;
-    grid-template-columns: repeat(8, 1fr);
+    grid-template-columns: repeat(7, 1fr);
     gap: 12px;
     margin-bottom: 28px;
     animation: fadeUp 0.5s ease both;
@@ -319,6 +319,7 @@
   .kpi-entity-chip.ZG  { color: #c084fc; border-color: rgba(192,132,252,0.3); background: rgba(192,132,252,0.08); }
   .kpi-entity-chip.ZTF { color: #fb923c; border-color: rgba(251,146,60,0.3);  background: rgba(251,146,60,0.08); }
   .kpi-entity-chip.ZDF { color: #4ade80; border-color: rgba(74,222,128,0.3);  background: rgba(74,222,128,0.08); }
+  .kpi-entity-chip.phase-chip { color: var(--accent); border-color: rgba(91,174,255,0.3); background: rgba(91,174,255,0.08); }
 
   .badge-phase-label {
     font-size: 10px;
@@ -1130,7 +1131,7 @@
 
   <div class="sidebar-footer">
     <div>Source: Currently Active Programs</div>
-    <div style="margin-top:4px;font-family:var(--mono);font-size:10px;">May 08, 2026 15:37</div>
+    <div style="margin-top:4px;font-family:var(--mono);font-size:10px;">May 09, 2026 08:18</div>
     <div style="margin-top:6px;font-size:9px;color:var(--text-muted);line-height:1.4">© Mosheera Salah · Internal use only</div>
   </div>
 </aside>
@@ -1147,9 +1148,9 @@
     <div class="header-right">
       <div class="live-badge">
         <div class="live-dot" id="live-dot"></div>
-        <span id="live-status">Data as of May 08, 2026 15:37</span>
+        <span id="live-status">Data as of May 09, 2026 08:18</span>
       </div>
-      <div class="date-badge" id="last-updated">May 08, 2026 15:37</div>
+      <div class="date-badge" id="last-updated">May 09, 2026 08:18</div>
     </div>
   </header>
 
@@ -1163,9 +1164,9 @@
         <div class="kpi-sub">in portfolio</div>
       </div>
       <div class="kpi-card">
-        <div class="kpi-label">Active / Open</div>
+        <div class="kpi-label">Open by PDP Phase</div>
         <div class="kpi-value open" id="kpi-open">—</div>
-        <div class="kpi-sub">in execution</div>
+        <div class="kpi-entity-breakdown" id="kpi-open-phases"></div>
       </div>
       <div class="kpi-card">
         <div class="kpi-label">🔴 Red</div>
@@ -1186,11 +1187,6 @@
         <div class="kpi-label">Budget Risk</div>
         <div class="kpi-value risk" id="kpi-budget">—</div>
         <div class="kpi-sub">exceeded budget</div>
-      </div>
-      <div class="kpi-card">
-        <div class="kpi-label">Closed</div>
-        <div class="kpi-value closed" id="kpi-closed">—</div>
-        <div class="kpi-sub">completed projects</div>
       </div>
       <div class="kpi-card">
         <div class="kpi-label">Closed by Entity</div>
@@ -1347,7 +1343,7 @@
         <div class="footer-dot"></div>
         Source: Currently Active Programs (Google Sheets)
       </div>
-      <div>Generated: May 08, 2026 15:37</div>
+      <div>Generated: May 09, 2026 08:18</div>
     </div>
     <div style="display:flex;flex-direction:column;align-items:flex-end;gap:3px">
       <div>© <strong style="color:var(--text-secondary)">Mosheera Salah</strong> · ZTF PMO Hub</div>
@@ -1582,14 +1578,25 @@ function initKPIs() {
     count: tp.filter(p => p.status === 'Closed' && p.entity === e).length
   })).filter(e => e.count > 0);
 
+  const openProjects = tp.filter(p => p.status === 'Open' || p.status === 'Paused');
+  const phaseOrder = ['EX','SD (Solution Design)','PD (Problem Definition)','PL (Post Launch)','Closure','Watchlist'];
+  const phaseShort = { 'EX':'EX', 'SD (Solution Design)':'SD', 'PD (Problem Definition)':'PD', 'PL (Post Launch)':'PL', 'Closure':'CL', 'Watchlist':'WL' };
+  const openByPhase = phaseOrder.map(ph => ({
+    phase: ph,
+    short: phaseShort[ph] || ph,
+    count: openProjects.filter(p => p.phase === ph).length
+  })).filter(p => p.count > 0);
+
   animateCount('kpi-total', total);
-  animateCount('kpi-open', open);
+  animateCount('kpi-open', openProjects.length);
   animateCount('kpi-red', red);
   animateCount('kpi-amber', amber);
   animateCount('kpi-green', green);
   animateCount('kpi-budget', budget);
-  animateCount('kpi-closed', closed);
   animateCount('kpi-closed-total', closed);
+  document.getElementById('kpi-open-phases').innerHTML = openByPhase
+    .map(p => `<span class="kpi-entity-chip phase-chip">${p.short} ${p.count}</span>`)
+    .join('');
   document.getElementById('kpi-closed-entities').innerHTML = closedByEntity
     .map(e => `<span class="kpi-entity-chip ${e.entity}">${e.entity} ${e.count}</span>`)
     .join('');
