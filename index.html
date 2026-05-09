@@ -257,7 +257,7 @@
   /* ── KPI STRIP ── */
   .kpi-strip {
     display: grid;
-    grid-template-columns: repeat(7, 1fr);
+    grid-template-columns: repeat(8, 1fr);
     gap: 12px;
     margin-bottom: 28px;
     animation: fadeUp 0.5s ease both;
@@ -1131,7 +1131,7 @@
 
   <div class="sidebar-footer">
     <div>Source: Currently Active Programs</div>
-    <div style="margin-top:4px;font-family:var(--mono);font-size:10px;">May 09, 2026 08:18</div>
+    <div style="margin-top:4px;font-family:var(--mono);font-size:10px;">May 09, 2026 08:21</div>
     <div style="margin-top:6px;font-size:9px;color:var(--text-muted);line-height:1.4">© Mosheera Salah · Internal use only</div>
   </div>
 </aside>
@@ -1148,9 +1148,9 @@
     <div class="header-right">
       <div class="live-badge">
         <div class="live-dot" id="live-dot"></div>
-        <span id="live-status">Data as of May 09, 2026 08:18</span>
+        <span id="live-status">Data as of May 09, 2026 08:21</span>
       </div>
-      <div class="date-badge" id="last-updated">May 09, 2026 08:18</div>
+      <div class="date-badge" id="last-updated">May 09, 2026 08:21</div>
     </div>
   </header>
 
@@ -1187,6 +1187,11 @@
         <div class="kpi-label">Budget Risk</div>
         <div class="kpi-value risk" id="kpi-budget">—</div>
         <div class="kpi-sub">exceeded budget</div>
+      </div>
+      <div class="kpi-card">
+        <div class="kpi-label">Other Status</div>
+        <div class="kpi-value" style="color:var(--text-secondary)" id="kpi-other">—</div>
+        <div class="kpi-entity-breakdown" id="kpi-other-breakdown"></div>
       </div>
       <div class="kpi-card">
         <div class="kpi-label">Closed by Entity</div>
@@ -1343,7 +1348,7 @@
         <div class="footer-dot"></div>
         Source: Currently Active Programs (Google Sheets)
       </div>
-      <div>Generated: May 09, 2026 08:18</div>
+      <div>Generated: May 09, 2026 08:21</div>
     </div>
     <div style="display:flex;flex-direction:column;align-items:flex-end;gap:3px">
       <div>© <strong style="color:var(--text-secondary)">Mosheera Salah</strong> · ZTF PMO Hub</div>
@@ -1587,15 +1592,25 @@ function initKPIs() {
     count: openProjects.filter(p => p.phase === ph).length
   })).filter(p => p.count > 0);
 
+  const otherProjects = tp.filter(p => p.status !== 'Open' && p.status !== 'Closed');
+  const otherBreakdown = [...new Set(otherProjects.map(p => p.status))].map(s => ({
+    label: s,
+    count: otherProjects.filter(p => p.status === s).length
+  }));
+
   animateCount('kpi-total', total);
   animateCount('kpi-open', openProjects.length);
   animateCount('kpi-red', red);
   animateCount('kpi-amber', amber);
   animateCount('kpi-green', green);
   animateCount('kpi-budget', budget);
+  animateCount('kpi-other', otherProjects.length);
   animateCount('kpi-closed-total', closed);
   document.getElementById('kpi-open-phases').innerHTML = openByPhase
     .map(p => `<span class="kpi-entity-chip phase-chip">${p.short} ${p.count}</span>`)
+    .join('');
+  document.getElementById('kpi-other-breakdown').innerHTML = otherBreakdown
+    .map(s => `<span class="kpi-entity-chip phase-chip" style="color:var(--text-muted);border-color:rgba(160,180,210,0.3);background:rgba(160,180,210,0.08)">${s.label} ${s.count}</span>`)
     .join('');
   document.getElementById('kpi-closed-entities').innerHTML = closedByEntity
     .map(e => `<span class="kpi-entity-chip ${e.entity}">${e.entity} ${e.count}</span>`)
