@@ -1677,6 +1677,12 @@ function makeEntityBadge(entity) {
   return `<span class="badge-entity ${entity}">${entity}</span>`;
 }
 
+function getRecentUpdates(update, max = 2) {
+  if (!update || !update.trim()) return '';
+  const lines = update.split('\n').map(l => l.trim()).filter(Boolean);
+  return lines.slice(0, max).join('\n');
+}
+
 const PHASE_LABELS = {
   'EX': 'Execution',
   'SD (Solution Design)': 'Solution Design',
@@ -1762,8 +1768,9 @@ function renderCards() {
   }
 
   grid.innerHTML = filtered.map((p, i) => {
-    const hasUpdate = p.update && p.update.trim();
-    const longUpdate = hasUpdate && p.update.length > 100;
+    const recentUpdate = getRecentUpdates(p.update);
+    const hasUpdate = !!recentUpdate;
+    const longUpdate = hasUpdate && recentUpdate.length > 100;
     return `
       <div class="proj-card rag-${p.rag || 'unknown'}" style="animation-delay:${i * 0.02}s">
         <div class="proj-card-top">
@@ -1784,7 +1791,7 @@ function renderCards() {
         <div class="divider"></div>
         <div>
           ${hasUpdate
-            ? `<div class="proj-update" id="upd-${i}">${p.update}</div>
+            ? `<div class="proj-update" id="upd-${i}">${recentUpdate}</div>
                ${longUpdate ? `<button class="expand-btn" onclick="toggleUpdate(${i}, this)">Show more ↓</button>` : ''}`
             : `<div class="no-update">No recent update</div>`}
         </div>
@@ -2063,8 +2070,9 @@ function renderYearView() {
   }
 
   grid.innerHTML = filtered.map((p, i) => {
-    const hasUpdate = p.update && p.update.trim();
-    const longUpdate = hasUpdate && p.update.length > 100;
+    const recentUpdate = getRecentUpdates(p.update);
+    const hasUpdate = !!recentUpdate;
+    const longUpdate = hasUpdate && recentUpdate.length > 100;
     return `
       <div class="proj-card rag-${p.rag || 'unknown'}" style="animation-delay:${i * 0.015}s">
         <div class="proj-card-top">
@@ -2085,7 +2093,7 @@ function renderYearView() {
         <div class="divider"></div>
         <div>
           ${hasUpdate
-            ? `<div class="proj-update" id="yupd-${i}">${p.update}</div>
+            ? `<div class="proj-update" id="yupd-${i}">${recentUpdate}</div>
                ${longUpdate ? `<button class="expand-btn" onclick="toggleYUpdate(${i}, this)">Show more ↓</button>` : ''}`
             : `<div class="no-update">No recent update</div>`}
         </div>
