@@ -49,16 +49,18 @@ for r in rows:
     if not name:
         continue
     p = {
-        "name":   name,
-        "pm":     r[2].strip()  if len(r) > 2  else "",
-        "phase":  r[3].strip()  if len(r) > 3  else "",
-        "entity": r[4].strip()  if len(r) > 4  else "",
-        "rag":    r[5].strip()  if len(r) > 5  else "",
-        "status": r[7].strip()  if len(r) > 7  else "",
-        "eta":    r[9].strip()  if len(r) > 9  else "",
-        "budget": r[11].strip() if len(r) > 11 else "",
-        "update": r[12].strip() if len(r) > 12 else "",
-        "year":   YEAR_MAP.get(name, "2025"),
+        "name":    name,
+        "summary": r[1].strip()  if len(r) > 1  else "",
+        "pm":      r[2].strip()  if len(r) > 2  else "",
+        "phase":   r[3].strip()  if len(r) > 3  else "",
+        "entity":  r[4].strip()  if len(r) > 4  else "",
+        "rag":     r[5].strip()  if len(r) > 5  else "",
+        "status":  r[7].strip()  if len(r) > 7  else "",
+        "start":   r[8].strip()  if len(r) > 8  else "",
+        "eta":     r[9].strip()  if len(r) > 9  else "",
+        "budget":  r[11].strip() if len(r) > 11 else "",
+        "update":  r[12].strip() if len(r) > 12 else "",
+        "year":    YEAR_MAP.get(name, "2025"),
     }
     projects.append(p)
 

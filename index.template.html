@@ -755,6 +755,27 @@
     opacity: 0.5;
   }
 
+  .proj-summary {
+    font-size: 11px;
+    color: var(--text-muted);
+    line-height: 1.5;
+    margin-bottom: 6px;
+    font-style: italic;
+  }
+
+  .badge-new {
+    font-size: 9px;
+    font-weight: 700;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    padding: 2px 6px;
+    border-radius: 4px;
+    background: rgba(16,185,129,0.12);
+    color: #10b981;
+    border: 1px solid rgba(16,185,129,0.3);
+    vertical-align: middle;
+  }
+
   /* ── FOOTER ── */
   .footer {
     margin-top: 40px;
@@ -1679,11 +1700,32 @@ function makeEntityBadge(entity) {
 
 function getRecentUpdates(update, max = 2) {
   if (!update || !update.trim()) return '';
-  const lines = update.split('\n').map(l => l.trim()).filter(Boolean);
-  return lines.slice(0, max).map(line =>
-    line.replace(/^(\d{1,2}[.\/\-]\d{1,2}[.\/\-]\d{2,4}[\s:]?|\[\d{1,2}\.\d{2}\][\s:]?|\d{1,2}\.\d{2}[\s:])/,
+  // Split on newlines first, then further split lines on inline date patterns
+  const rawLines = update.split('\n').map(l => l.trim()).filter(Boolean);
+  const datePattern = /(?=\d{1,2}[.\/]\d{1,2}[.\/]\d{2,4}|\[\d{1,2}\.\d{2}\])/g;
+  const entries = [];
+  for (const line of rawLines) {
+    const parts = line.split(datePattern).map(l => l.trim()).filter(Boolean);
+    entries.push(...parts);
+  }
+  const recent = (entries.length > 0 ? entries : rawLines).slice(0, max);
+  return recent.map(line =>
+    line.replace(/^(\[\d{1,2}\.\d{2}\]\s*|\d{1,2}[.\/]\d{1,2}[.\/]\d{2,4}\s*:?\s*|\d{1,2}\.\d{2}:\s*)/,
       '<strong>$&</strong>')
-  ).join('<br>');
+  ).join('<br><br>');
+}
+
+function isNewProject(start) {
+  if (!start) return false;
+  const parts = start.split(/[\/\-\.]/).map(Number);
+  if (parts.length < 3) return false;
+  // try dd/mm/yyyy first, then mm/dd/yyyy
+  const d1 = new Date(parts[2], parts[1] - 1, parts[0]);
+  const d2 = new Date(parts[2], parts[0] - 1, parts[1]);
+  const date = (d1 instanceof Date && !isNaN(d1) && parts[2] > 2000) ? d1 : d2;
+  if (isNaN(date)) return false;
+  const now = new Date();
+  return (now - date) / (1000 * 60 * 60 * 24) <= 28;
 }
 
 const PHASE_LABELS = {
@@ -1774,12 +1816,14 @@ function renderCards() {
     const recentUpdate = getRecentUpdates(p.update);
     const hasUpdate = !!recentUpdate;
     const longUpdate = hasUpdate && recentUpdate.length > 100;
+    const isNew = isNewProject(p.start);
     return `
       <div class="proj-card rag-${p.rag || 'unknown'}" style="animation-delay:${i * 0.02}s">
         <div class="proj-card-top">
-          <div class="proj-name">${p.name}</div>
+          <div class="proj-name">${p.name}${isNew ? ' <span class="badge-new">New</span>' : ''}</div>
           <div title="${p.rag || 'Unknown'} RAG">${makeRagBadge(p.rag)}</div>
         </div>
+        ${p.summary ? `<div class="proj-summary">${p.summary}</div>` : ''}
         <div class="proj-meta">
           ${makeEntityBadge(p.entity)}
           ${makePhaseBadge(p.phase)}
@@ -2076,12 +2120,14 @@ function renderYearView() {
     const recentUpdate = getRecentUpdates(p.update);
     const hasUpdate = !!recentUpdate;
     const longUpdate = hasUpdate && recentUpdate.length > 100;
+    const isNew = isNewProject(p.start);
     return `
       <div class="proj-card rag-${p.rag || 'unknown'}" style="animation-delay:${i * 0.015}s">
         <div class="proj-card-top">
-          <div class="proj-name">${p.name}</div>
+          <div class="proj-name">${p.name}${isNew ? ' <span class="badge-new">New</span>' : ''}</div>
           <div title="${p.rag || 'Unknown'} RAG">${makeRagBadge(p.rag)}</div>
         </div>
+        ${p.summary ? `<div class="proj-summary">${p.summary}</div>` : ''}
         <div class="proj-meta">
           ${makeEntityBadge(p.entity)}
           ${makePhaseBadge(p.phase)}
