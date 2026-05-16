@@ -1095,6 +1095,13 @@
         </svg>
         By Year
       </button>
+      <button class="nav-item" id="nav-new" onclick="showView('new')">
+        <svg class="nav-icon" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5">
+          <circle cx="8" cy="8" r="6.5"/>
+          <path d="M8 5v6M5 8h6"/>
+        </svg>
+        Recently Added
+      </button>
     </nav>
   </div>
 
@@ -1345,6 +1352,19 @@
     </div>
 
     <!-- VIEW: BY PM -->
+    <div id="view-new" style="display:none">
+      <div class="section-header" style="margin-bottom:20px">
+        <div class="section-title">
+          <svg width="14" height="14" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" style="opacity:0.6">
+            <circle cx="8" cy="8" r="6.5"/><path d="M8 5v6M5 8h6"/>
+          </svg>
+          Recently Added — Last 4 Weeks
+        </div>
+      </div>
+      <div id="new-summary" style="margin-bottom:16px;font-size:13px;color:var(--text-muted)"></div>
+      <div class="projects-grid" id="new-projects-grid"></div>
+    </div>
+
     <div id="view-pm" style="display:none">
       <div class="section-header" style="margin-bottom:20px">
         <div class="section-title">
@@ -2162,10 +2182,70 @@ function toggleYUpdate(i, btn) {
   }
 }
 
+function renderNewView() {
+  const newProjects = getTabProjects().filter(p => isNewProject(p.start));
+  const grid = document.getElementById('new-projects-grid');
+  const summary = document.getElementById('new-summary');
+
+  summary.textContent = newProjects.length
+    ? `${newProjects.length} project${newProjects.length !== 1 ? 's' : ''} added in the last 4 weeks`
+    : 'No projects added in the last 4 weeks.';
+
+  if (!newProjects.length) {
+    grid.innerHTML = `<div class="empty-state"><div class="empty-icon">📂</div><div class="empty-text">No recently added projects.</div></div>`;
+    return;
+  }
+
+  grid.innerHTML = newProjects.map((p, i) => {
+    const recentUpdate = getRecentUpdates(p.update);
+    const hasUpdate = !!recentUpdate;
+    const longUpdate = hasUpdate && recentUpdate.length > 100;
+    return `
+      <div class="proj-card rag-${p.rag || 'unknown'}" style="animation-delay:${i * 0.02}s">
+        <div class="proj-card-top">
+          <div class="proj-name">${p.name} <span class="badge-new">New</span></div>
+          <div title="${p.rag || 'Unknown'} RAG">${makeRagBadge(p.rag)}</div>
+        </div>
+        ${p.summary ? `<div class="proj-summary">${p.summary}</div>` : ''}
+        <div class="proj-meta">
+          ${makeEntityBadge(p.entity)}
+          ${makePhaseBadge(p.phase)}
+          ${makeStatusBadge(p.status)}
+          <span class="badge-year y${p.year}">${p.year}</span>
+          ${makeBudgetBadge(p.budget)}
+        </div>
+        <div class="divider"></div>
+        ${makePhaseLabel(p.phase, p.status)}
+        ${p.pm ? `<div class="proj-row"><span class="proj-row-label">PM</span><span class="proj-row-val">${p.pm}</span></div>` : ''}
+        ${p.start ? `<div class="proj-row"><span class="proj-row-label">Started</span><span class="proj-row-val">${p.start}</span></div>` : ''}
+        ${p.eta ? `<div class="proj-row"><span class="proj-row-label">ETA</span><span class="proj-row-val eta">${p.eta}</span></div>` : ''}
+        <div class="divider"></div>
+        <div>
+          ${hasUpdate
+            ? `<div class="proj-update" id="nupd-${i}">${recentUpdate}</div>
+               ${longUpdate ? `<button class="expand-btn" onclick="toggleNUpdate(${i}, this)">Show more ↓</button>` : ''}`
+            : `<div class="no-update">No recent update</div>`}
+        </div>
+      </div>
+    `;
+  }).join('');
+}
+
+function toggleNUpdate(i, btn) {
+  const el = document.getElementById(`nupd-${i}`);
+  if (el.classList.contains('expanded')) {
+    el.classList.remove('expanded');
+    btn.textContent = 'Show more ↓';
+  } else {
+    el.classList.add('expanded');
+    btn.textContent = 'Show less ↑';
+  }
+}
+
 function showView(view) {
   currentView = view;
   // Keep tab buttons active, only toggle view nav buttons
-  ['dashboard','risks','pm','year'].forEach(v => {
+  ['dashboard','risks','pm','year','new'].forEach(v => {
     const el = document.getElementById('nav-' + v);
     if (el) el.classList.toggle('active', v === view);
   });
@@ -2174,14 +2254,16 @@ function showView(view) {
   document.getElementById('view-risks').style.display = view === 'risks' ? '' : 'none';
   document.getElementById('view-pm').style.display = view === 'pm' ? '' : 'none';
   document.getElementById('view-year').style.display = view === 'year' ? '' : 'none';
+  document.getElementById('view-new').style.display = view === 'new' ? '' : 'none';
 
   // Update header subtitle
-  const subtitles = { dashboard: 'Dashboard', risks: 'Risks & Attention', pm: 'By Project Manager', year: 'By Year' };
+  const subtitles = { dashboard: 'Dashboard', risks: 'Risks & Attention', pm: 'By Project Manager', year: 'By Year', new: 'Recently Added' };
   const tabLabel = currentTab === 'active' ? '2026 Active Programs' : 'Archive · 2024 & 2025';
   document.querySelector('.header-sub').textContent = tabLabel + ' · ' + subtitles[view];
 
   if (view === 'pm') renderPMView();
   if (view === 'year') renderYearView();
+  if (view === 'new') renderNewView();
 }
 
 // Init
