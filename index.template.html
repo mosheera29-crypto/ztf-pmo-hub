@@ -719,7 +719,7 @@
 
   .proj-update {
     font-size: 11.5px;
-    color: var(--text-muted);
+    color: var(--text-secondary);
     line-height: 1.55;
     display: -webkit-box;
     -webkit-line-clamp: 2;
@@ -1720,19 +1720,19 @@ function makeEntityBadge(entity) {
 
 function getRecentUpdates(update, max = 2) {
   if (!update || !update.trim()) return '';
-  // Split on newlines first, then further split lines on inline date patterns
   const rawLines = update.split('\n').map(l => l.trim()).filter(Boolean);
+  // Split inline on date patterns like "15.05.2025:" or "[15.04]"
   const datePattern = /(?=\d{1,2}[.\/]\d{1,2}[.\/]\d{2,4}|\[\d{1,2}\.\d{2}\])/g;
   const entries = [];
   for (const line of rawLines) {
     const parts = line.split(datePattern).map(l => l.trim()).filter(Boolean);
-    entries.push(...parts);
+    entries.push(...(parts.length > 1 ? parts : [line]));
   }
-  const recent = (entries.length > 0 ? entries : rawLines).slice(0, max);
-  return recent.map(line =>
-    line.replace(/^(\[\d{1,2}\.\d{2}\]\s*|\d{1,2}[.\/]\d{1,2}[.\/]\d{2,4}\s*:?\s*|\d{1,2}\.\d{2}:\s*)/,
-      '<strong>$&</strong>')
-  ).join('<br><br>');
+  return entries.slice(0, max).map(line => {
+    // Bold the leading date token
+    return line.replace(/^(\[\d{1,2}\.\d{2}\]\s*:?|(\d{1,2}[.\/]\d{1,2}[.\/]\d{2,4})\s*:?\s*)/,
+      '<strong style="color:var(--text-primary)">$&</strong> ');
+  }).join('<br><br>');
 }
 
 function isNewProject(start) {
